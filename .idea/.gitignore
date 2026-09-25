@@ -1,0 +1,6 @@
+out
+/.idea/
+/target/
+/mc-plugin-template.iml
+Velcord.iml
+dependency-reduced-pom.xml
