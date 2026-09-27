@@ -39,7 +39,7 @@ Velcord provides oppurtinity to use only one plugin on your proxy server to mana
 
 - LuckPerms installed 
 - Discord developer account
-- fully built api endpoint that will handle OAuth2 requests and connect accounts externally(example website will be shown)
+- fully built api endpoint that will handle OAuth2 requests and connect accounts externally. Working api can be found [here](https://github.com/Alekxsski/Discord_Auth) and is also possible to modify it's behaviour up on user authorization. You always can always develop your own api based on this example.
 - One discord application(Two separate application are strongly advised as discord may limit your requests)
 
 
@@ -59,6 +59,11 @@ Velcord provides oppurtinity to use only one plugin on your proxy server to mana
 **Need Help?**
 - Check wiki
 - Open an issue
+## Acknowledgements
+
+Velcord uses other open-source dependencies such as 
+- 
+
 ## License ⚖️
 
 [GNU AGPLv3](https://choosealicense.com/licenses/agpl-3.0/)
