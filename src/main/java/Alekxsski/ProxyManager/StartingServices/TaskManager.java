@@ -1,4 +1,4 @@
-package Alekxsski.ProxyManager;
+package Alekxsski.ProxyManager.StartingServices;
 
 import com.google.inject.Inject;
 import com.velocitypowered.api.proxy.ProxyServer;
@@ -16,25 +16,27 @@ public class TaskManager {
     private final DiscordAuthHashMapCleaner discordAuthHashMapCleaner;
     private final ProxyServer server;
     private final Logger logger;
-    private final Long SyncTimeOut;
+    private final Config config;
 
     @Inject
-    public TaskManager(RolesManager rolesManager, DiscordAuthHashMapCleaner discordAuthHashMapCleaner, ProxyServer server, Logger logger, Config config){
+    public TaskManager(RolesManager rolesManager, DiscordAuthHashMapCleaner discordAuthHashMapCleaner
+            , ProxyServer server, Logger logger, Config config){
 
         this.discordAuthHashMapCleaner = discordAuthHashMapCleaner;
         this.rolesManager = rolesManager;
         this.server = server;
         this.logger = logger;
-        this.SyncTimeOut = config.getSyncTimeOut();
+        this.config = config;
 
     }
 
     public void startTasks(Velcord plugin){
 
+        Long syncTimeOut = config.getSyncTimeOut();
 
-        createTask(plugin,15L,5L,discordAuthHashMapCleaner::start);
+        createTask(plugin,15L,5L,discordAuthHashMapCleaner::clean);
 
-        if(syncTime(SyncTimeOut)) createTask(plugin,SyncTimeOut,10L,rolesManager::start);
+        if(syncTime(syncTimeOut)) createTask(plugin, syncTimeOut,10L,rolesManager::start);
 
 
     }

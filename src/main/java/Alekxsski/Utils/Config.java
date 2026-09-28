@@ -157,6 +157,11 @@ public class Config implements ReloadBehaviour {
 
         this.dataDirectory = dataDirectory;
 
+    }
+
+
+    public void setUp(){
+
         make();
 
         gettingData();

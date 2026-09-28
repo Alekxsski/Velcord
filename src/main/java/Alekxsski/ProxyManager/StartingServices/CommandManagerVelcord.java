@@ -1,4 +1,4 @@
-package Alekxsski.ProxyManager;
+package Alekxsski.ProxyManager.StartingServices;
 
 import com.google.inject.Inject;
 import com.velocitypowered.api.command.CommandMeta;
@@ -27,8 +27,11 @@ public class CommandManagerVelcord {
 
     public void registerCommands(Velcord plugin){
 
+        discordVerify.setUp();
+        reload.setUp();
+
         registerCommand(plugin,"discord", "dc", discordVerify);
-        registerCommand(plugin, "huzuni_velocity_reload","hvr", reload);
+        registerCommand(plugin, "velcord_reload","vr", reload);
 
     }
 

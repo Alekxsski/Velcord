@@ -9,16 +9,16 @@ import Alekxsski.Utils.DiscordAuth.Utils.DiscordAuthData;
 import Alekxsski.Utils.DiscordAuth.Utils.DiscordAuthHashMap;
 import org.jspecify.annotations.NonNull;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Singleton
 public class DiscordAuth implements ReloadBehaviour {
 
     private final Config config;
     private final DatabaseDiscordMethods discordAuthData;
-    private final HashMap <UUID, DiscordAuthData> discordAuthDataHashMap;
+    private final ConcurrentHashMap<UUID, DiscordAuthData> discordAuthDataHashMap;
 
     private String DiscordApiBaseUrl;
 
@@ -44,6 +44,10 @@ public class DiscordAuth implements ReloadBehaviour {
         this.config = config;
         this.discordAuthDataHashMap = discordAuthHashMap.getDiscordAuthDataHashMap();
         this.discordAuthData = databaseDiscordMethods;
+
+    }
+
+    public void setUp(){
 
         gettingData();
 

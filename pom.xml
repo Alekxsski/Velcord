@@ -146,16 +146,6 @@
                         </goals>
                     </execution>
                 </executions>
-
-                <configuration>
-
-                    <relocations>
-                        <relocation>
-                            <pattern>Alexsski.Velcord.libs.dvs.versioning</pattern>
-                            <shadedPattern>Alexsski.Velcord.shaded.dvs.versioning</shadedPattern>
-                        </relocation>
-                    </relocations>
-                </configuration>
             </plugin>
 
         </plugins>
@@ -201,12 +191,6 @@
         </dependency>
 
         <dependency>
-            <groupId>io.github.classgraph</groupId>
-            <artifactId>classgraph</artifactId>
-            <version>4.8.194</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>7.1.0</version>
@@ -238,7 +222,16 @@
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
             <version>6.6.0</version>
-            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>club.minnced</groupId>
+                    <artifactId>opus-java</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.crypto.tink</groupId>
+                    <artifactId>tink</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
     </dependencies>

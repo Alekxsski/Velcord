@@ -8,31 +8,32 @@ import Alekxsski.Utils.DiscordAuth.Utils.DiscordAuthHashMap;
 import Alekxsski.ProxyManager.JdaHook.RolesManager.RolesManager;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class DiscordVerify extends ListenerAdapter {
 
-    private final HashMap<UUID, DiscordAuthData> discordAuthDataHashMap;
+    private final ConcurrentHashMap<UUID, DiscordAuthData> discordAuthDataHashMap;
 
     private final DatabaseDiscordMethods databaseDiscordMethods;
 
     private final RolesManager rolesManager;
 
-    private final String VerifyName;
+    private final Config config;
 
-    private final String VerifyCodeVarName;
+    private String VerifyName;
 
-    private final String VerifyUUIDVarName;
+    private String VerifyCodeVarName;
 
-    private final String VerifyNoCode;
+    private String VerifyUUIDVarName;
 
-    private final String VerifyInvalidCode;
+    private String VerifyNoCode;
 
-    private final String VerifySuccessCode;
+    private String VerifyInvalidCode;
+
+    private String VerifySuccessCode;
 
 
 
@@ -48,17 +49,24 @@ public class DiscordVerify extends ListenerAdapter {
 
         this.discordAuthDataHashMap = discordAuthHashMap.getDiscordAuthDataHashMap();
 
-        this.VerifyName = config.getVerifyName();
+        this.config = config;
 
-        this.VerifyCodeVarName = config.getVerifyCodeVarName();
 
-        this.VerifyUUIDVarName = config.getVerifyUUIDVarName();
+    }
 
-        this.VerifyNoCode = config.getVerifyNoCode();
+    public void setUp(){
 
-        this.VerifyInvalidCode = config.getVerifyInvalidCode();
+        VerifyName = config.getVerifyName();
 
-        this.VerifySuccessCode = config.getVerifySuccessCode();
+        VerifyCodeVarName = config.getVerifyCodeVarName();
+
+        VerifyUUIDVarName = config.getVerifyUUIDVarName();
+
+        VerifyNoCode = config.getVerifyNoCode();
+
+        VerifyInvalidCode = config.getVerifyInvalidCode();
+
+        VerifySuccessCode = config.getVerifySuccessCode();
 
     }
 
@@ -66,25 +74,25 @@ public class DiscordVerify extends ListenerAdapter {
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event){
         if (event.getName().equals(VerifyName)){
 
+            event.deferReply(true).queue();
+
             String userId = event.getUser().getId();
             String code = Objects.requireNonNull(event.getOption(VerifyCodeVarName)).getAsString();
             UUID uuid = UUID.fromString(Objects.requireNonNull(event.getOption(VerifyUUIDVarName)).getAsString());
 
-            String message = isCodeValid(code,uuid, userId);
+            isCodeValid(code,uuid, userId, event);
 
-            event.reply(message).setEphemeral(true).queue();
 
         }
 
 
     }
 
-    private String isCodeValid(String code, UUID uuid, String userId){
+    private void isCodeValid(String code, UUID uuid, String userId, SlashCommandInteractionEvent event){
 
         if(discordAuthDataHashMap.containsKey(uuid)){
 
             if(Objects.equals(discordAuthDataHashMap.get(uuid).getCode(), code)){
-
 
                 databaseDiscordMethods.executeStatement("INSERT INTO player_discord (uuid, discord_user_id) VALUES (?, ?)", List.of(uuid.toString(),userId),null)
                         .thenRun(() ->{
@@ -92,21 +100,21 @@ public class DiscordVerify extends ListenerAdapter {
                             rolesManager.MemberUpdateUUID(userId,uuid);
                             discordAuthDataHashMap.remove(uuid);
 
-                        });
+                            event.getHook().sendMessage(VerifySuccessCode).queue();
 
-                return VerifySuccessCode;
+                        });
 
             }
 
             else {
 
-                return VerifyInvalidCode;
+                event.getHook().sendMessage(VerifyInvalidCode).queue();
 
             }
 
         }
 
-        return VerifyNoCode;
+        event.getHook().sendMessage(VerifyNoCode).queue();
 
     }
 

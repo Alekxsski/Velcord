@@ -29,7 +29,7 @@ public class ProxyManagement {
         logger.error(error_message);
         logger.error("Plugin has encountered critical error and will now shut down",exception);
 
-        Optional<PluginContainer> container = server.getPluginManager().getPlugin("Huzuni_Velocity_Development");
+        Optional<PluginContainer> container = server.getPluginManager().getPlugin("velcord");
 
         container.ifPresent(pluginContainer -> pluginContainer.getExecutorService().shutdown());
     }

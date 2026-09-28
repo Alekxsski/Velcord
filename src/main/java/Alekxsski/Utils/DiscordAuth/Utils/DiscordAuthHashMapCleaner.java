@@ -11,11 +11,12 @@ import Alekxsski.Utils.PlayerBased.Minimessage;
 
 import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Singleton
 public class DiscordAuthHashMapCleaner implements ReloadBehaviour {
 
-    private final HashMap<UUID, DiscordAuthData> discordAuthDataHashMap;
+    private final ConcurrentHashMap<UUID, DiscordAuthData> discordAuthDataHashMap;
 
     private final DatabaseDiscordMethods databaseDiscordMethods;
 
@@ -38,6 +39,10 @@ public class DiscordAuthHashMapCleaner implements ReloadBehaviour {
 
         this.config = config;
 
+    }
+
+    public void start(){
+
         gettingData();
 
     }
@@ -58,7 +63,7 @@ public class DiscordAuthHashMapCleaner implements ReloadBehaviour {
     }
 
 
-    public void start(){
+    public void clean(){
 
             long timenow = Instant.now().getEpochSecond();
 

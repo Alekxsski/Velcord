@@ -27,7 +27,7 @@ public class DatabaseManager {
     @Getter
     private ExecutorService dbThreads;
 
-    private final HikariDataSource database;
+    private HikariDataSource database;
 
     private String username;
 
@@ -58,13 +58,17 @@ public class DatabaseManager {
 
         this.config = config;
 
+    }
+
+    public void initialize(){
+
         gettingData();
 
         dbThreads = setUpThreads();
 
-        this.database = establishDatabase();
+        database = establishDatabase();
 
-        initializeDatabase();
+        configure();
 
     }
 
@@ -129,7 +133,7 @@ public class DatabaseManager {
 
         config.setMaxLifetime(MaxLifetime);
 
-        config.setPoolName("Huzuni_Velocity_Pool");
+        config.setPoolName("Velcord_Pool");
 
         logger.info("Plugin successfully connected to the database");
 
@@ -151,7 +155,7 @@ public class DatabaseManager {
 
     }
 
-    public void initializeDatabase() {
+    public void configure() {
 
         try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
 
@@ -165,11 +169,11 @@ public class DatabaseManager {
             statement.executeUpdate(statement3);
             statement.executeUpdate(statement4);
 
-            logger.info("Huzuni Velocity Plugin Successfully initialized database!");
+            logger.info("Huzuni Velocity Plugin Successfully configured database!");
 
         }catch (SQLException e){
 
-            proxyManagement.shutDown("Huzuni has Failed to connect to initialize database",e);
+            proxyManagement.shutDown("Huzuni has Failed to connect to configure database",e);
 
         }
     }

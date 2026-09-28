@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import Alekxsski.Database.DatabaseManager;
 import Alekxsski.ProxyManager.JdaHook.Utils.LinkedUser;
+import lombok.Setter;
 import org.slf4j.Logger;
 
 import java.sql.Connection;
@@ -20,14 +21,12 @@ public class DatabaseDiscordMethods {
 
     private final DatabaseManager databaseManager;
     private final Logger logger;
-    private final Executor dbThreads;
 
     @Inject
     public DatabaseDiscordMethods(DatabaseManager databaseManager, Logger logger){
 
         this.databaseManager = databaseManager;
         this.logger = logger;
-        this.dbThreads = databaseManager.getDbThreads();
 
     }
 
@@ -70,11 +69,13 @@ public class DatabaseDiscordMethods {
             }catch (SQLException e){
 
                 logger.error("Yep Error's here",e);
+
+                return "error";
             }
 
             return optional_value_from_query;
 
-        },dbThreads);
+        },databaseManager.getDbThreads());
 
     }
 
@@ -106,7 +107,7 @@ public class DatabaseDiscordMethods {
                 return users;
             }
 
-        },dbThreads);
+        },databaseManager.getDbThreads());
 
     }
 

@@ -5,16 +5,17 @@ import lombok.Getter;
 
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Singleton
 public class DiscordAuthHashMap {
 
     @Getter
-    private final HashMap <UUID, DiscordAuthData> discordAuthDataHashMap;
+    private final ConcurrentHashMap<UUID, DiscordAuthData> discordAuthDataHashMap;
 
     DiscordAuthHashMap(){
 
-        this.discordAuthDataHashMap = new HashMap<>();
+        this.discordAuthDataHashMap = new ConcurrentHashMap<>();
 
     }
 

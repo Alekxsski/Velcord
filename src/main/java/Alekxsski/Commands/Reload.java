@@ -35,6 +35,10 @@ public class Reload implements SimpleCommand, ReloadBehaviour {
 
         this.discordAuthHashMapCleaner = discordAuthHashMapCleaner;
 
+    }
+
+    public void setUp(){
+
         gettingData();
 
     }

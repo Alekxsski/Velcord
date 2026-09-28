@@ -1,5 +1,6 @@
 package Alekxsski;
 
+import Alekxsski.ProxyManager.BootStrapper;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.Subscribe;
@@ -7,9 +8,9 @@ import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import Alekxsski.Database.DatabaseManager;
-import Alekxsski.ProxyManager.CommandManagerVelcord;
+import Alekxsski.ProxyManager.StartingServices.CommandManagerVelcord;
 import Alekxsski.ProxyManager.JdaHook.JdaHook;
-import Alekxsski.ProxyManager.TaskManager;
+import Alekxsski.ProxyManager.StartingServices.TaskManager;
 import org.slf4j.Logger;
 
 @Plugin(id = "velcord", name = "velcord", version = "1.0-alpha", dependencies =
@@ -17,33 +18,20 @@ import org.slf4j.Logger;
 )
 public class Velcord {
 
-    private final CommandManagerVelcord commandManagerVelcord;
-
-    private final DatabaseManager databaseManager;
-
-    private final TaskManager taskManager;
+    private final BootStrapper bootStrapper;
 
 
     @Inject
-    public Velcord(Logger logger, CommandManagerVelcord commandManagerVelcord, TaskManager taskManager, DatabaseManager databaseManager, JdaHook jdaHook){
+    public Velcord(BootStrapper bootStrapper){
 
-        this.commandManagerVelcord = commandManagerVelcord;
-
-        this.taskManager = taskManager;
-
-        this.databaseManager = databaseManager;
-
-        logger.info("Huzuni_velocity started");
+        this.bootStrapper = bootStrapper;
 
     }
 
     @Subscribe
-    public void onProxyInitialization(ProxyInitializeEvent event) {
+    public void onProxyInitialization(ProxyInitializeEvent event) throws InterruptedException {
 
-
-        commandManagerVelcord.registerCommands(this);
-
-        taskManager.startTasks(this);
+        bootStrapper.start(this);
 
     }
 
@@ -51,7 +39,7 @@ public class Velcord {
     @Subscribe
     public void proxyShutdownEvent(ProxyShutdownEvent event){
 
-        databaseManager.shutDown();
+        bootStrapper.shutDown();
 
     }
 

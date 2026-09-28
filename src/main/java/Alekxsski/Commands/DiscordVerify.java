@@ -1,6 +1,7 @@
 package Alekxsski.Commands;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
 import Alekxsski.Database.PlayerManagment.DatabaseDiscordMethods;
@@ -15,6 +16,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+@Singleton
 public class DiscordVerify implements SimpleCommand, ReloadBehaviour {
 
     private final DiscordAuth discordAuth;
@@ -43,6 +45,11 @@ public class DiscordVerify implements SimpleCommand, ReloadBehaviour {
         this.config = config;
 
         this.rolesManager = rolesManager;
+
+
+    }
+
+    public void setUp(){
 
         gettingData();
 
@@ -87,26 +94,30 @@ public class DiscordVerify implements SimpleCommand, ReloadBehaviour {
 
 
                 databaseDiscordMethods.executeStatement("SELECT discord_user_id FROM minecraft_to_discord WHERE uuid = ?",
-                        List.of(player_uuid.toString()), "discord_user_id").thenAccept(user_discord_id -> {
+                        List.of(player_uuid.toString()), "discord_user_id")
+                        .thenAccept(user_discord_id -> {
 
-                    if(Objects.equals(args[0], "polacz")){
+                            if (!Objects.equals(user_discord_id, "error")) {
 
-                        verificationConnect(player,player_uuid, user_discord_id);
-    
-                    }
+                                if (Objects.equals(args[0], "polacz")) {
 
-                    else if (Objects.equals(args[0], "rozlacz")) {
+                                    verificationConnect(player, player_uuid, user_discord_id);
 
-                        verificationDisconnect(player,player_uuid, user_discord_id);
+                                } else if (Objects.equals(args[0], "rozlacz")) {
 
-                    }
-                    else {
+                                    verificationDisconnect(player, player_uuid, user_discord_id);
 
-                        player.sendMessage(Minimessage.MinimessagePlain(HintUsage));
+                                } else {
 
-                    }
+                                    player.sendMessage(Minimessage.MinimessagePlain(HintUsage));
+
+                                }
+                            }
+
+                            else player.sendMessage(Minimessage.MinimessagePlain("command couldn't be executed report this to the admins"));
 
                 });
+
             }
 
         }

@@ -24,16 +24,21 @@ public class RolesManager {
 
     private final ProxyServer server;
 
-    private final Map<String, String> RolesToSync;
+    private final Config config;
+
+    private Map<String, String> RolesToSync;
 
     private Map<String, Role> RolesToSyncConverted;
 
-    private final Boolean DefaultRole;
+    private Boolean DefaultRole;
 
-    private final Boolean UserLeaveNickname;
+    private Boolean UserLeaveNickname;
 
     @Setter
     private Guild guild;
+
+    @Setter
+    private Member self;
 
     @Inject
     public RolesManager(Config config, Logger logger, DatabaseDiscordMethods databaseDiscordMethods, ProxyServer server){
@@ -44,12 +49,17 @@ public class RolesManager {
 
         this.server = server;
 
-        this.RolesToSync = config.getRolesToSync();
+        this.config = config;
 
-        this.DefaultRole = config.getDefaultRole();
 
-        this.UserLeaveNickname = config.getUserLeaveNickname();
+    }
 
+    public void setup(){
+        RolesToSync = config.getRolesToSync();
+
+        DefaultRole = config.getDefaultRole();
+
+        UserLeaveNickname = config.getUserLeaveNickname();
     }
 
     public void discordRolesConversion(){
@@ -138,7 +148,7 @@ public class RolesManager {
 
         Member member = guild.getMemberById(user_discord_id);
 
-        if (member != null) {
+        if (member != null && canModify(member)) {
 
             if (!UserLeaveNickname) guild.modifyNickname(member,null).queue();
 
@@ -165,7 +175,7 @@ public class RolesManager {
 
         Member member = guild.getMemberById(user_discord_id);
 
-        if (member != null) {
+        if (member != null && canModify(member)) {
 
             checkMemberNick(member,user_mc_name);
 
@@ -183,7 +193,7 @@ public class RolesManager {
 
                 Member member = guild.getMemberById(user_discord_id);
 
-                if(member != null){
+                if(member != null && canModify(member)){
 
                     List<Role> roles = member.getRoles();
 
@@ -231,6 +241,12 @@ public class RolesManager {
 
         }
         guild.modifyMemberRoles(member,MemberOtherRoles).queue();
+    }
+
+    private boolean canModify(Member member){
+
+        return self.canInteract(member);
+
     }
 
 

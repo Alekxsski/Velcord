@@ -2,7 +2,6 @@ package Alekxsski.ProxyManager.JdaHook;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import lombok.Getter;
 import Alekxsski.ProxyManager.ProxyManagement;
 import Alekxsski.Utils.Config;
 import Alekxsski.ProxyManager.JdaHook.Commands.DiscordVerify;
@@ -20,33 +19,60 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 @Singleton
 public class JdaHook {
 
-    private final JDA jda;
+    private JDA jda;
 
     private final RolesManager rolesManager;
 
     private final ProxyManagement proxyManagement;
 
-    @Getter
-    private final Guild guild;
+    private final Config config;
 
-    private final String VerifyName;
+    private final DiscordVerify discordVerify;
 
-    private final String VerifyDescription;
+    private Guild guild;
 
-    private final String VerifyCodeVarName;
+    private String VerifyName;
 
-    private final String VerifyCodeVarDescription;
+    private String VerifyDescription;
 
-    private final String VerifyUUIDVarName;
+    private String VerifyCodeVarName;
 
-    private final String VerifyUUIDVarDescription;
+    private String VerifyCodeVarDescription;
+
+    private String VerifyUUIDVarName;
+
+    private String VerifyUUIDVarDescription;
 
 
 
     @Inject
-    public JdaHook(Config config, DiscordVerify discordVerify, RolesManager rolesManager, ProxyManagement proxyManagement) throws InterruptedException {
+    public JdaHook(Config config, DiscordVerify discordVerify, RolesManager rolesManager, ProxyManagement proxyManagement){
 
-        this.jda = JDABuilder.createDefault(config.getBotToken())
+        this.discordVerify = discordVerify;
+
+        this.config = config;
+
+        this.rolesManager = rolesManager;
+
+        this.proxyManagement = proxyManagement;
+
+    }
+
+    public void setUp() throws InterruptedException {
+
+        VerifyName = config.getVerifyName();
+
+        VerifyDescription = config.getVerifyDescription();
+
+        VerifyCodeVarName = config.getVerifyCodeVarName();
+
+        VerifyCodeVarDescription = config.getVerifyCodeVarDescription();
+
+        VerifyUUIDVarName = config.getVerifyUUIDVarName();
+
+        VerifyUUIDVarDescription = config.getVerifyUUIDVarDescription();
+
+        jda = JDABuilder.createDefault(config.getBotToken())
                 .enableIntents(GatewayIntent.GUILD_MEMBERS,
                         GatewayIntent.DIRECT_MESSAGES,
                         GatewayIntent.GUILD_MESSAGES)
@@ -54,34 +80,27 @@ public class JdaHook {
                         CacheFlag.CLIENT_STATUS,
                         CacheFlag.ONLINE_STATUS,
                         CacheFlag.VOICE_STATE
-                        )
+                )
                 .setChunkingFilter(ChunkingFilter.ALL)
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
                 .addEventListeners(discordVerify).build();
 
         jda.awaitReady();
 
-        this.guild = jda.getGuildById(config.getGuildId());
+        guild = jda.getGuildById(config.getGuildId());
 
-        this.rolesManager = rolesManager;
-
-        this.proxyManagement = proxyManagement;
-
-        this.VerifyName = config.getVerifyName();
-
-        this.VerifyDescription = config.getVerifyDescription();
-
-        this.VerifyCodeVarName = config.getVerifyCodeVarName();
-
-        this.VerifyCodeVarDescription = config.getVerifyCodeVarDescription();
-
-        this.VerifyUUIDVarName = config.getVerifyUUIDVarName();
-
-        this.VerifyUUIDVarDescription = config.getVerifyUUIDVarDescription();
+        if (guild == null) proxyManagement.shutDown("Guild not found",
+                new Exception("Check config to make sure your guild id is valid and application is registered on this guild"));
 
         syncRolesStart();
 
         registerCommands();
+
+    }
+
+    public void stop(){
+
+        jda.shutdown();
 
     }
 
@@ -96,13 +115,9 @@ public class JdaHook {
 
     private void syncRolesStart(){
 
-        if(guild == null){
-
-            proxyManagement.shutDown("Check your config and make sure application is in the right guild", new Exception("Guild wasn't found"));
-
-        }
-
         rolesManager.setGuild(guild);
+
+        rolesManager.setSelf(guild.getSelfMember());
 
         rolesManager.discordRolesConversion();
 
