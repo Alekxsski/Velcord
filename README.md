@@ -66,5 +66,5 @@ Velcord uses other open-source dependencies such as
 
 ## License ⚖️
 
-[GNU AGPLv3](https://choosealicense.com/licenses/agpl-3.0/)
+[GNU GPLv3](https://choosealicense.com/licenses/agpl-3.0/)
 
