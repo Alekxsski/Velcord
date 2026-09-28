@@ -3,7 +3,6 @@ package Alekxsski.Utils.DiscordAuth.Utils;
 import com.google.inject.Singleton;
 import lombok.Getter;
 
-import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 

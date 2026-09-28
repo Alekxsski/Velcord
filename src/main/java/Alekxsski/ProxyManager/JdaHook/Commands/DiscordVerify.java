@@ -21,23 +21,17 @@ public class DiscordVerify extends ListenerAdapter {
 
     private final RolesManager rolesManager;
 
-    private final Config config;
+    private final String VerifyName;
 
-    private String VerifyName;
+    private final String VerifyCodeVarName;
 
-    private String VerifyCodeVarName;
+    private final String VerifyUUIDVarName;
 
-    private String VerifyUUIDVarName;
+    private final String VerifyNoCode;
 
-    private String VerifyNoCode;
+    private final String VerifyInvalidCode;
 
-    private String VerifyInvalidCode;
-
-    private String VerifySuccessCode;
-
-
-
-
+    private final String VerifySuccessCode;
 
 
     @Inject
@@ -48,13 +42,6 @@ public class DiscordVerify extends ListenerAdapter {
         this.rolesManager = rolesManager;
 
         this.discordAuthDataHashMap = discordAuthHashMap.getDiscordAuthDataHashMap();
-
-        this.config = config;
-
-
-    }
-
-    public void setUp(){
 
         VerifyName = config.getVerifyName();
 
@@ -111,6 +98,7 @@ public class DiscordVerify extends ListenerAdapter {
                 event.getHook().sendMessage(VerifyInvalidCode).queue();
 
             }
+            return;
 
         }
 

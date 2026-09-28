@@ -34,6 +34,8 @@ public class TaskManager {
 
         Long syncTimeOut = config.getSyncTimeOut();
 
+        discordAuthHashMapCleaner.setUp();
+
         createTask(plugin,15L,5L,discordAuthHashMapCleaner::clean);
 
         if(syncTime(syncTimeOut)) createTask(plugin, syncTimeOut,10L,rolesManager::start);

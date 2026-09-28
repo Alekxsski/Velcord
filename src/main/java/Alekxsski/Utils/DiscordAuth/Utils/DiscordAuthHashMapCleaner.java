@@ -41,7 +41,7 @@ public class DiscordAuthHashMapCleaner implements ReloadBehaviour {
 
     }
 
-    public void start(){
+    public void setUp(){
 
         gettingData();
 

@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import Alekxsski.Database.DatabaseManager;
 import Alekxsski.ProxyManager.JdaHook.Utils.LinkedUser;
-import lombok.Setter;
 import org.slf4j.Logger;
 
 import java.sql.Connection;
@@ -14,7 +13,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 
 @Singleton
 public class DatabaseDiscordMethods {

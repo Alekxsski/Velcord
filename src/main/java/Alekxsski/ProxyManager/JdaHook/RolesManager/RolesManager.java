@@ -24,15 +24,13 @@ public class RolesManager {
 
     private final ProxyServer server;
 
-    private final Config config;
-
-    private Map<String, String> RolesToSync;
+    private final Map<String, String> RolesToSync;
 
     private Map<String, Role> RolesToSyncConverted;
 
-    private Boolean DefaultRole;
+    private final Boolean DefaultRole;
 
-    private Boolean UserLeaveNickname;
+    private final Boolean UserLeaveNickname;
 
     @Setter
     private Guild guild;
@@ -49,17 +47,12 @@ public class RolesManager {
 
         this.server = server;
 
-        this.config = config;
-
-
-    }
-
-    public void setup(){
         RolesToSync = config.getRolesToSync();
 
         DefaultRole = config.getDefaultRole();
 
         UserLeaveNickname = config.getUserLeaveNickname();
+
     }
 
     public void discordRolesConversion(){

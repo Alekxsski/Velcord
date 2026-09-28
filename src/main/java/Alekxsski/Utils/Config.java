@@ -157,6 +157,8 @@ public class Config implements ReloadBehaviour {
 
         this.dataDirectory = dataDirectory;
 
+        setUp();
+
     }
 
 
