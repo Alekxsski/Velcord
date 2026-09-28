@@ -3,42 +3,31 @@ package Alekxsski.ProxyManager.StartingServices;
 import com.google.inject.Inject;
 import com.velocitypowered.api.proxy.ProxyServer;
 import Alekxsski.Velcord;
-import Alekxsski.Utils.Config;
 import Alekxsski.Utils.DiscordAuth.Utils.DiscordAuthHashMapCleaner;
-import Alekxsski.ProxyManager.JdaHook.RolesManager.RolesManager;
 import org.slf4j.Logger;
 
 import java.util.concurrent.TimeUnit;
 
 public class TaskManager {
 
-    private final RolesManager rolesManager;
     private final DiscordAuthHashMapCleaner discordAuthHashMapCleaner;
     private final ProxyServer server;
     private final Logger logger;
-    private final Config config;
 
     @Inject
-    public TaskManager(RolesManager rolesManager, DiscordAuthHashMapCleaner discordAuthHashMapCleaner
-            , ProxyServer server, Logger logger, Config config){
+    public TaskManager(DiscordAuthHashMapCleaner discordAuthHashMapCleaner, ProxyServer server, Logger logger){
 
         this.discordAuthHashMapCleaner = discordAuthHashMapCleaner;
-        this.rolesManager = rolesManager;
         this.server = server;
         this.logger = logger;
-        this.config = config;
 
     }
 
     public void startTasks(Velcord plugin){
 
-        Long syncTimeOut = config.getSyncTimeOut();
-
         discordAuthHashMapCleaner.setUp();
 
         createTask(plugin,15L,5L,discordAuthHashMapCleaner::clean);
-
-        if(syncTime(syncTimeOut)) createTask(plugin, syncTimeOut,10L,rolesManager::start);
 
 
     }

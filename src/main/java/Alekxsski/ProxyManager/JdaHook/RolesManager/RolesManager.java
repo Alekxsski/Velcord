@@ -5,7 +5,6 @@ import com.google.inject.Singleton;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import lombok.Setter;
-import Alekxsski.Database.PlayerManagment.DatabaseDiscordMethods;
 import Alekxsski.Utils.Config;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -14,13 +13,12 @@ import org.slf4j.Logger;
 
 import java.util.*;
 
+
 @Singleton
 public class RolesManager {
 
 
     private final Logger logger;
-
-    private final DatabaseDiscordMethods databaseDiscordMethods;
 
     private final ProxyServer server;
 
@@ -39,11 +37,9 @@ public class RolesManager {
     private Member self;
 
     @Inject
-    public RolesManager(Config config, Logger logger, DatabaseDiscordMethods databaseDiscordMethods, ProxyServer server){
+    public RolesManager(Config config, Logger logger, ProxyServer server){
 
         this.logger = logger;
-
-        this.databaseDiscordMethods = databaseDiscordMethods;
 
         this.server = server;
 
@@ -52,6 +48,7 @@ public class RolesManager {
         DefaultRole = config.getDefaultRole();
 
         UserLeaveNickname = config.getUserLeaveNickname();
+
 
     }
 
@@ -101,23 +98,24 @@ public class RolesManager {
 
     }
 
-    private void checkMemberNick(Member member, String user_mc_name){
+    public void checkMember(String user_discord_id,String user_mc_name,String primary_role){
 
-        String member_nick = member.getNickname();
+        Member member = guild.getMemberById(user_discord_id);
+        if (member != null && canModify(member)){
 
-        if(!Objects.equals(member_nick, user_mc_name)){
+            checkMemberNick(member, user_mc_name);
 
-            guild.modifyNickname(member,user_mc_name).queue();
+            checkMemberRoles(member,primary_role);
+
 
         }
 
+
     }
 
-    private void checkMemberRoles(Member member, String user_discord_id){
+    public void checkMemberRoles(Member member, String primary_group){
 
         List<Role> MemberActiveRoles = getMemberOtherRoles(new ArrayList<>(member.getRoles()));
-
-        databaseDiscordMethods.executeStatement("SELECT * FROM minecraft_to_discord WHERE discord_user_id = ?",List.of(user_discord_id),"primary_group").thenAccept(primary_group ->{
 
             if(primary_group != null){
 
@@ -133,7 +131,21 @@ public class RolesManager {
 
             }
 
-        });
+
+    }
+
+
+
+
+    public void checkMemberNick(Member member, String user_mc_name){
+
+        String member_nick = member.getNickname();
+
+        if(!Objects.equals(member_nick, user_mc_name)){
+
+            guild.modifyNickname(member,user_mc_name).queue();
+
+        }
 
     }
 
@@ -178,45 +190,11 @@ public class RolesManager {
 
     }
 
-    public void start(){
-
-        databaseDiscordMethods.getlinkedMembers().thenAcceptAsync(user_map ->{
-
-            user_map.forEach((user_discord_id, linked_user) ->{
-
-                Member member = guild.getMemberById(user_discord_id);
-
-                if(member != null && canModify(member)){
-
-                    List<Role> roles = member.getRoles();
-
-                    Role primary_role = RolesToSyncConverted.get(linked_user.primary_group());
-
-                    if(!roles.contains(primary_role)){
-
-                        List<Role> other_roles = getMemberOtherRoles(new ArrayList<>(roles));
-                        givePrimaryRole(primary_role,other_roles,member);
-
-                    }
-
-                    checkMemberNick(member, linked_user.username());
-
-                }
-
-
-            });
-
-        });
-
-    }
-
     private void givePrimaryRole(Role primary_role, List<Role> MemberOtherRoles, Member member){
 
         Role default_role = RolesToSyncConverted.get("default");
 
         if(primary_role != null){
-
-            logger.info("user {} has been given role {}", member.getEffectiveName(), primary_role.getName());
 
             if (primary_role == default_role){
 

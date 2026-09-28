@@ -101,7 +101,7 @@ public class DiscordVerify implements SimpleCommand, ReloadBehaviour {
 
                                 if (Objects.equals(args[0], "polacz")) {
 
-                                    verificationConnect(player, player_uuid, user_discord_id);
+                                    verificationConnect(player, user_discord_id);
 
                                 } else if (Objects.equals(args[0], "rozlacz")) {
 
@@ -124,7 +124,7 @@ public class DiscordVerify implements SimpleCommand, ReloadBehaviour {
 
     }
 
-    private void verificationConnect(Player player,UUID player_uuid, String user_discord_id){
+    private void verificationConnect(Player player, String user_discord_id){
 
         if (user_discord_id != null) {
 
@@ -133,9 +133,10 @@ public class DiscordVerify implements SimpleCommand, ReloadBehaviour {
 
         } else {
 
-            String url = discordAuth.MakeUrl(player_uuid);
+            String url = discordAuth.MakeUrl(player);
 
             player.sendMessage(Minimessage.MinimessagePlain(url));
+
 
         }
 

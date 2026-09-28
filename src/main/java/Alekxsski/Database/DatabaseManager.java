@@ -161,13 +161,11 @@ public class DatabaseManager {
 
             String statement1 = "CREATE TABLE IF NOT EXISTS player_discord(uuid varchar(64),discord_user_id varchar(20),PRIMARY KEY (uuid))";
             String statement2 = "DROP TABLE IF EXISTS auth_codes";
-            String statement3 = "CREATE TABLE auth_codes(uuid varchar(64),code varchar(16),PRIMARY KEY (uuid))";
-            String statement4 = "CREATE VIEW IF NOT EXISTS minecraft_to_discord AS SELECT r.uuid, r.discord_user_id,u.username, u.primary_group FROM player_discord r LEFT JOIN luckperms_players u ON r.uuid = u.uuid";
+            String statement3 = "CREATE TABLE auth_codes(uuid varchar(64),username varchar(16),primary_group varchar(36),code varchar(16),PRIMARY KEY (uuid))";
 
             statement.executeUpdate(statement1);
             statement.executeUpdate(statement2);
             statement.executeUpdate(statement3);
-            statement.executeUpdate(statement4);
 
             logger.info("Huzuni Velocity Plugin Successfully configured database!");
 

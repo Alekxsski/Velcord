@@ -1,5 +1,8 @@
 package Alekxsski.Utils.DiscordAuth;
 
+import Alekxsski.LuckPerms.LuckPermsManager;
+import Alekxsski.LuckPerms.LuckPlayerData;
+import Alekxsski.Utils.PlayerBased.Minimessage;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import Alekxsski.Database.PlayerManagment.DatabaseDiscordMethods;
@@ -7,6 +10,7 @@ import Alekxsski.Interfaces.ReloadBehaviour;
 import Alekxsski.Utils.Config;
 import Alekxsski.Utils.DiscordAuth.Utils.DiscordAuthData;
 import Alekxsski.Utils.DiscordAuth.Utils.DiscordAuthHashMap;
+import com.velocitypowered.api.proxy.Player;
 import org.jspecify.annotations.NonNull;
 
 import java.util.List;
@@ -19,6 +23,7 @@ public class DiscordAuth implements ReloadBehaviour {
     private final Config config;
     private final DatabaseDiscordMethods discordAuthData;
     private final ConcurrentHashMap<UUID, DiscordAuthData> discordAuthDataHashMap;
+    private final LuckPermsManager luckPermsManager;
 
     private String DiscordApiBaseUrl;
 
@@ -32,6 +37,9 @@ public class DiscordAuth implements ReloadBehaviour {
 
     private String VerifyName;
 
+    private String ErrorCodeMessage;
+
+
     private boolean DiscordOAuth2;
 
 
@@ -39,11 +47,14 @@ public class DiscordAuth implements ReloadBehaviour {
     private String BeforeClickMessage;
 
     @Inject
-    public DiscordAuth(Config config, DatabaseDiscordMethods databaseDiscordMethods, DiscordAuthHashMap discordAuthHashMap){
+    public DiscordAuth(Config config, DatabaseDiscordMethods databaseDiscordMethods, DiscordAuthHashMap discordAuthHashMap, LuckPermsManager luckPermsManager){
 
         this.config = config;
         this.discordAuthDataHashMap = discordAuthHashMap.getDiscordAuthDataHashMap();
         this.discordAuthData = databaseDiscordMethods;
+        this.luckPermsManager = luckPermsManager;
+
+        setUp();
 
     }
 
@@ -81,9 +92,13 @@ public class DiscordAuth implements ReloadBehaviour {
 
         BeforeClickMessage = config.getBeforeClickMessage();
 
+        ErrorCodeMessage = config.getErrorCodeMessage();
+
     }
 
-    public String MakeUrl(UUID player_uuid){
+    public @NonNull String MakeUrl(Player player ){
+
+        UUID player_uuid = player.getUniqueId();
 
             if (discordAuthDataHashMap.containsKey(player_uuid)){
 
@@ -93,13 +108,31 @@ public class DiscordAuth implements ReloadBehaviour {
 
             String code = generateCode();
 
-        String url = getUrl(player_uuid, code);
+            String url = getUrl(player_uuid, code);
 
-        discordAuthDataHashMap.put(player_uuid,new DiscordAuthData(url,code));
+            discordAuthDataHashMap.put(player_uuid,new DiscordAuthData(url,code));
 
-            if(DiscordOAuth2) discordAuthData.executeStatement("INSERT INTO auth_codes(uuid,code) VALUES (?, ?)", List.of(player_uuid.toString(), code),null);
+                if(DiscordOAuth2) {
 
-            return url;
+                    LuckPlayerData playerData = luckPermsManager.getActivePlayerData(player_uuid);
+
+                        if(playerData != null){
+
+                            discordAuthData.executeStatement("INSERT INTO auth_codes(uuid ,username ,primary_group ,code) VALUES (?, ?, ?, ?)",
+                                    List.of(player_uuid.toString(), playerData.playerName(), playerData.primaryGroup(), code),null);
+
+                        }
+
+                        else{
+
+                            player.sendMessage(Minimessage.MinimessagePlain(ErrorCodeMessage));
+
+                        }
+
+
+                }
+
+                return url;
 
     }
 

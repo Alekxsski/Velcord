@@ -11,6 +11,8 @@ hint_usage: you can type dc link or unlink to manage connect or disconnect disco
 
 expired_code_message: code has expired
 
+error_code_message: something went wrong please contact server administrator
+
 connected_message: you have successfully connected your discord account
 
 disconnected_message: you have successfully disconnected your discord account
@@ -75,8 +77,6 @@ RolesToSync:
   - base_role: 'id'
   - default: 'id'
 # etc
-
-SyncTimeOut: 120
 
 #Guild
 GuildId: ' your guild Id '

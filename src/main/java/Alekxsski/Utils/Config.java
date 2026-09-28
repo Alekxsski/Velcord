@@ -86,6 +86,9 @@ public class Config implements ReloadBehaviour {
     private String HintUsage;
 
     @Getter
+    private String ErrorCodeMessage;
+
+    @Getter
     private String DisconnectedMessage;
 
     @Getter
@@ -266,6 +269,8 @@ public class Config implements ReloadBehaviour {
     public void gettingData(){
 
         DiscordApiBaseUrl = config.getString(Route.from("DiscordApiBaseUrl"));
+
+        ErrorCodeMessage = config.getString(Route.from("error_code_message"));
 
         RedirectUrl = config.getString(Route.from("RedirectUrl"));
 
