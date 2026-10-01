@@ -26,19 +26,12 @@ public class Velcord {
     }
 
     @Subscribe
-    public void onProxyInitialization(ProxyInitializeEvent event) {
+    public void onProxyInitialization(ProxyInitializeEvent event){
 
         logger.info("Velcord started");
-
-    }
-
-    @Subscribe
-    public void onProxyFinalization(ListenerBoundEvent event) throws InterruptedException {
-
         bootStrapper.Hook(this);
 
     }
-
 
     @Subscribe
     public void proxyShutdownEvent(ProxyShutdownEvent event){

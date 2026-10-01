@@ -75,7 +75,7 @@ UserLeaveNickname: false
 
 RolesToSync:
   - base_role: 'id'
-  - default: 'id'
+    default: 'id'
 # etc
 
 #Guild
