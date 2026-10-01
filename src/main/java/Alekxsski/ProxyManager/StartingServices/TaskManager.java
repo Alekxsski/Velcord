@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import com.velocitypowered.api.proxy.ProxyServer;
 import Alekxsski.Velcord;
 import Alekxsski.Utils.DiscordAuth.Utils.DiscordAuthHashMapCleaner;
-import org.slf4j.Logger;
 
 import java.util.concurrent.TimeUnit;
 
@@ -12,14 +11,12 @@ public class TaskManager {
 
     private final DiscordAuthHashMapCleaner discordAuthHashMapCleaner;
     private final ProxyServer server;
-    private final Logger logger;
 
     @Inject
-    public TaskManager(DiscordAuthHashMapCleaner discordAuthHashMapCleaner, ProxyServer server, Logger logger){
+    public TaskManager(DiscordAuthHashMapCleaner discordAuthHashMapCleaner, ProxyServer server){
 
         this.discordAuthHashMapCleaner = discordAuthHashMapCleaner;
         this.server = server;
-        this.logger = logger;
 
     }
 
@@ -39,25 +36,6 @@ public class TaskManager {
                 .repeat(repeat, TimeUnit.SECONDS)
                 .delay(delay, TimeUnit.SECONDS)
                 .schedule();
-
-    }
-
-    private boolean syncTime(long repeat){
-        if(repeat > 0L) {
-
-            if(repeat < 15L) {
-
-                logger.warn("Are you sure you want to sync all members that frequently? such task can be very cpu demanding." +
-                        " Consider changing time value to at least 15s. Task will be still enabled it's just a recommendation");
-
-            }
-
-            return true;
-
-        }
-
-        logger.info("Role synchronization has been disabled!");
-        return false;
 
     }
 

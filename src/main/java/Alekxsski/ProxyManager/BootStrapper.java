@@ -1,16 +1,13 @@
 package Alekxsski.ProxyManager;
 
 import Alekxsski.Database.DatabaseManager;
-import Alekxsski.LuckPerms.LuckPermsManager;
 import Alekxsski.LuckPerms.LuckyListener.LuckyListener;
 import Alekxsski.ProxyManager.JdaHook.JdaHook;
 import Alekxsski.ProxyManager.StartingServices.CommandManagerVelcord;
 import Alekxsski.ProxyManager.StartingServices.TaskManager;
-import Alekxsski.Utils.DiscordAuth.DiscordAuth;
 import Alekxsski.Velcord;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import net.luckperms.api.LuckPermsProvider;
 import org.slf4j.Logger;
 
 @Singleton

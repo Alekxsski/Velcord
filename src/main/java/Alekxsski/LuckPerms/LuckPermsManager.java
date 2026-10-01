@@ -55,22 +55,5 @@ public class LuckPermsManager {
 
     }
 
-    private LuckPlayerData getOfflinePlayerData(UUID player_uuid){
-
-        UserManager userManager = getLuckApi().getUserManager();
-
-        User user = userManager.loadUser(player_uuid).join();
-
-        return new LuckPlayerData(user.getUsername(),user.getPrimaryGroup());
-
-    }
-
-    private boolean isLoaded(UUID player_uuid) {
-
-        return getLuckApi().getUserManager().isLoaded(player_uuid);
-
-    }
-
-
 
 }
