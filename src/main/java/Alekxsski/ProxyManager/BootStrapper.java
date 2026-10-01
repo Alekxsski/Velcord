@@ -33,7 +33,7 @@ public class BootStrapper {
 
     }
 
-    public void Hook(Velcord plugin) throws InterruptedException {
+    public void Hook(Velcord plugin) {
 
         commandManagerVelcord.registerCommands(plugin);
 

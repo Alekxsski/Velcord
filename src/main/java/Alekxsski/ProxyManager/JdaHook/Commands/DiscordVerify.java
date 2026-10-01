@@ -59,6 +59,7 @@ public class DiscordVerify extends ListenerAdapter {
 
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event){
+
         if (event.getName().equals(VerifyName)){
 
             event.deferReply(true).queue();

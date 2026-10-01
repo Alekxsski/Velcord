@@ -75,7 +75,7 @@ UserLeaveNickname: false
 
 RolesToSync:
   - base_role: 'id'
-  - default: 'id'
+    default: 'id'
 # etc
 
 #Guild
@@ -94,7 +94,9 @@ BotToken: 'your bot token'
 #Don't change the value unless you know what you're doing! better to stick with easier version if you don't feel fancy you also need to restart your server to change the mode!
 DiscordOAuth2: false
 
-DiscordApiBaseUrl: 'https://discord.com/api/oauth2/authorize?client_id='
+DiscordApiAuthUrl: 'https://discord.com/api/oauth2/authorize?client_id='
+
+DiscordApiBaseUrl: 'https://discord.com/api/v10'
 
 #Redirect URL(URI) can be found on discord developer site and remember it must be one that's set on you're api application
 RedirectUrl: 'only needed if youre going to use OAuth2'
@@ -102,6 +104,8 @@ RedirectUrl: 'only needed if youre going to use OAuth2'
 #Client id of bot that performs actions after Redirect URL(URI) it can be id of application used in BotToken, although I strongly recommend creating another discord application
 #as it doesn't cost you anything and doubles your bandwidth of api calls made to the discord.
 ClientId: 'only needed if youre going to use OAuth2'
+
+ClientSecret: 'client secret app'
 
 #Name of verification command on discord
 VerifyName: ' desired name of the verify command '

@@ -149,7 +149,7 @@ public class Config implements ReloadBehaviour {
     private Boolean UserLeaveNickname;
 
     @Getter
-    private Long SyncTimeOut;
+    private String ClientSecret;
 
     @Inject
     public Config(Logger logger, ProxyManagement proxyManagement, @DataDirectory Path dataDirectory){
@@ -258,7 +258,7 @@ public class Config implements ReloadBehaviour {
 
         UserLeaveNickname = config.getBoolean(Route.from("UserLeaveNickname"));
 
-        SyncTimeOut = config.getLong(Route.from("SyncTimeOut"));
+        ClientSecret = config.getString(Route.from("ClientSecret"));
 
         RolesToSync = settingRolesValues(config.getMapList("RolesToSync").getFirst());
 

@@ -2,7 +2,6 @@ package Alekxsski;
 
 import Alekxsski.ProxyManager.BootStrapper;
 import com.google.inject.Inject;
-import com.velocitypowered.api.event.proxy.ListenerBoundEvent;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
@@ -26,19 +25,12 @@ public class Velcord {
     }
 
     @Subscribe
-    public void onProxyInitialization(ProxyInitializeEvent event) {
+    public void onProxyInitialization(ProxyInitializeEvent event){
 
         logger.info("Velcord started");
-
-    }
-
-    @Subscribe
-    public void onProxyFinalization(ListenerBoundEvent event) throws InterruptedException {
-
         bootStrapper.Hook(this);
 
     }
-
 
     @Subscribe
     public void proxyShutdownEvent(ProxyShutdownEvent event){
