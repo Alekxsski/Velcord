@@ -56,11 +56,9 @@ public class DiscordUserManager {
 
                 response = discordApi.getMemberId(response.value());
 
-                logger.info(response.value());
-
                 LuckPlayerData luckPlayerData = luckPermsManager.getActivePlayerData(player_uuid);
 
-                if(response.code() != 200){
+                if(response.code() == 200){
 
                     databaseDiscordMethods.executeStatement("INSERT INTO player_discord (uuid, discord_user_id) VALUES (?, ?)",
                             List.of(player_uuid.toString(), response.value()),null);
@@ -79,6 +77,10 @@ public class DiscordUserManager {
 
         },DiscordUserManagerThreads);
 
+    }
+
+    public void stop(){
+        DiscordUserManagerThreads.shutdown();
     }
 
 }

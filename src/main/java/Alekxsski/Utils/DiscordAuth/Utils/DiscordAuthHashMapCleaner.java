@@ -18,6 +18,8 @@ public class DiscordAuthHashMapCleaner implements ReloadBehaviour {
 
     private final ConcurrentHashMap<UUID, DiscordAuthData> discordAuthDataHashMap;
 
+    private final ConcurrentHashMap<String, UUID> discordCodeHashMap;
+
     private final DatabaseDiscordMethods databaseDiscordMethods;
 
     private final ProxyServer server;
@@ -34,6 +36,8 @@ public class DiscordAuthHashMapCleaner implements ReloadBehaviour {
     public DiscordAuthHashMapCleaner( ProxyServer server, DatabaseDiscordMethods databaseDiscordMethods, DiscordAuthHashMap discordAuthHashMap, Config config){
 
         this.discordAuthDataHashMap = discordAuthHashMap.getDiscordAuthDataHashMap();
+
+        this.discordCodeHashMap = discordAuthHashMap.getDiscordAuthCodeHashMap();
 
         this.databaseDiscordMethods = databaseDiscordMethods;
 
@@ -83,9 +87,7 @@ public class DiscordAuthHashMapCleaner implements ReloadBehaviour {
                     Optional<Player> player = server.getPlayer(uuid);
 
                     if(DiscordOAuth2 && RedirectExternally){
-
-
-
+                        
                         databaseDiscordMethods.executeStatement("SELECT * FROM player_discord WHERE uuid = ?",List.of(uuid.toString()),"discord_user_id")
                                 .thenAccept(discord_user_id ->{
 
@@ -99,6 +101,11 @@ public class DiscordAuthHashMapCleaner implements ReloadBehaviour {
 
                         it.remove();
                         return;
+
+                    } else if (DiscordOAuth2) {
+
+                        discordCodeHashMap.remove(entry.getValue().getCode());
+                        
                     }
 
                     player.ifPresent(p-> p.sendMessage(Minimessage.MinimessagePlain(ExpiredCodeMessage)));

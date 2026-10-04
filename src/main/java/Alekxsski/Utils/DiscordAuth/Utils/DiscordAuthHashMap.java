@@ -12,9 +12,13 @@ public class DiscordAuthHashMap {
     @Getter
     private final ConcurrentHashMap<UUID, DiscordAuthData> discordAuthDataHashMap;
 
+    @Getter
+    private final ConcurrentHashMap<String, UUID> discordAuthCodeHashMap;
+
     DiscordAuthHashMap(){
 
         this.discordAuthDataHashMap = new ConcurrentHashMap<>();
+        this.discordAuthCodeHashMap = new ConcurrentHashMap<>();
 
     }
 

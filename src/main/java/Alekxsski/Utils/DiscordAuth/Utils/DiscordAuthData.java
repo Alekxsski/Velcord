@@ -16,6 +16,7 @@ public class DiscordAuthData {
     @Getter
     private final String code;
 
+
     public DiscordAuthData(String auth_url,String code){
 
         this.auth_url = auth_url;

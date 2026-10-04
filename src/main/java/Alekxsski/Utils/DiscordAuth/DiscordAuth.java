@@ -23,6 +23,7 @@ public class DiscordAuth implements ReloadBehaviour {
     private final Config config;
     private final DatabaseDiscordMethods discordAuthData;
     private final ConcurrentHashMap<UUID, DiscordAuthData> discordAuthDataHashMap;
+    private final ConcurrentHashMap<String, UUID> discordAuthCodeHashMap;
     private final LuckPermsManager luckPermsManager;
 
     private final String DiscordApiBaseUrl;
@@ -52,6 +53,7 @@ public class DiscordAuth implements ReloadBehaviour {
 
         this.config = config;
         this.discordAuthDataHashMap = discordAuthHashMap.getDiscordAuthDataHashMap();
+        this.discordAuthCodeHashMap = discordAuthHashMap.getDiscordAuthCodeHashMap();
         this.discordAuthData = databaseDiscordMethods;
         this.luckPermsManager = luckPermsManager;
 
@@ -133,9 +135,14 @@ public class DiscordAuth implements ReloadBehaviour {
                         }
 
 
+
+                } else if (DiscordOAuth2) {
+
+                    discordAuthCodeHashMap.put(code,player_uuid);
+
                 }
 
-                return url;
+        return url;
 
     }
 

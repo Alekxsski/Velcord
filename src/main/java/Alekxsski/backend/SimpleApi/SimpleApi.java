@@ -17,6 +17,7 @@ public class SimpleApi {
     private Javalin simpleApiJavalin;
     private final DiscordUserManager discordUserManager;
     private final Config config;
+    private final ConcurrentHashMap<String, UUID> discordCodeHashMap;
     private final ConcurrentHashMap<UUID, DiscordAuthData> discordAuthHashMap;
 
     @Inject
@@ -26,7 +27,10 @@ public class SimpleApi {
 
         this.config = config;
 
+        this.discordCodeHashMap = discordAuthHashMap.getDiscordAuthCodeHashMap();
+
         this.discordAuthHashMap = discordAuthHashMap.getDiscordAuthDataHashMap();
+
 
     }
 
@@ -48,9 +52,15 @@ public class SimpleApi {
                     }
 
                     // Check for necessary UUID in existing hashmap to avoid expensive async operation with discord api.
-                    if(discordAuthHashMap.containsKey(UUID.fromString(state))){
+                    if(discordCodeHashMap.containsKey(state)){
 
-                        return discordUserManager.HandleOAuth2(code,UUID.fromString(state))
+                        UUID player_uuid = discordCodeHashMap.get(state);
+
+                        discordCodeHashMap.remove(state);
+
+                        discordAuthHashMap.remove(player_uuid);
+
+                        return discordUserManager.HandleOAuth2(code,player_uuid)
                                 .thenAccept(responseData -> {
 
                                     if (responseData.code() == 200){
@@ -101,7 +111,10 @@ public class SimpleApi {
 
     public void stop(){
 
-        if(simpleApiJavalin != null) simpleApiJavalin.stop();
+        if(simpleApiJavalin != null) {
+            discordUserManager.stop();
+            simpleApiJavalin.stop();
+        }
 
     }
 

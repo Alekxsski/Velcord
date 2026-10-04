@@ -49,8 +49,6 @@ public class RolesManager {
 
         UserLeaveNickname = config.getUserLeaveNickname();
 
-        discordRolesConversion();
-
     }
 
     public void discordRolesConversion(){

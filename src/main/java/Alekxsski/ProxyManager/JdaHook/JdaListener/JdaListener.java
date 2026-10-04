@@ -62,7 +62,9 @@ public class JdaListener implements EventListener{
 
             rolesManager.setSelf(guild.getSelfMember());
 
-            registerCommands(guild);
+            rolesManager.discordRolesConversion();
+
+            if(!config.isDiscordOAuth2()) registerCommands(guild);
 
         }
 
