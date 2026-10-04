@@ -45,10 +45,11 @@ public class RolesManager {
 
         RolesToSync = config.getRolesToSync();
 
-        DefaultRole = config.getDefaultRole();
+        DefaultRole = config.isDefaultRole();
 
         UserLeaveNickname = config.getUserLeaveNickname();
 
+        discordRolesConversion();
 
     }
 
@@ -98,7 +99,7 @@ public class RolesManager {
 
     }
 
-    public void checkMember(String user_discord_id,String user_mc_name,String primary_role){
+    public void checkMember(String user_discord_id,String user_mc_name,String primary_role) throws Exception {
 
         Member member = guild.getMemberById(user_discord_id);
         if (member != null && canModify(member)){
@@ -113,7 +114,7 @@ public class RolesManager {
 
     }
 
-    public void checkMemberRoles(Member member, String primary_group){
+    public void checkMemberRoles(Member member, String primary_group) throws Exception {
 
         List<Role> MemberActiveRoles = getMemberOtherRoles(new ArrayList<>(member.getRoles()));
 
@@ -127,7 +128,7 @@ public class RolesManager {
 
             else{
 
-                logger.warn("Primary group wasn't found");
+                throw new Exception("Primary group wasn't found");
 
             }
 
@@ -172,11 +173,17 @@ public class RolesManager {
 
         Optional<Player> player = server.getPlayer(uuid);
 
-        player.ifPresent(value -> MemberUpdateName(user_discord_id, value.getUsername()));
+        player.ifPresent(value -> {
+            try {
+                MemberUpdateName(user_discord_id, value.getUsername());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
 
     }
 
-    public void MemberUpdateName(String user_discord_id,String user_mc_name){
+    public void MemberUpdateName(String user_discord_id,String user_mc_name) throws Exception {
 
         Member member = guild.getMemberById(user_discord_id);
 

@@ -3,12 +3,8 @@ package Alekxsski.Database.PlayerManagment;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import Alekxsski.Database.DatabaseManager;
-import org.slf4j.Logger;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -16,13 +12,11 @@ import java.util.concurrent.CompletableFuture;
 public class DatabaseDiscordMethods {
 
     private final DatabaseManager databaseManager;
-    private final Logger logger;
 
     @Inject
-    public DatabaseDiscordMethods(DatabaseManager databaseManager, Logger logger){
+    public DatabaseDiscordMethods(DatabaseManager databaseManager){
 
         this.databaseManager = databaseManager;
-        this.logger = logger;
 
     }
 
@@ -65,11 +59,8 @@ public class DatabaseDiscordMethods {
 
                 else statement.executeUpdate();
 
-            }catch (SQLException e){
-
-                logger.error("Yep Error's here",e);
-
-                return "error";
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
 
             return optional_value_from_query;

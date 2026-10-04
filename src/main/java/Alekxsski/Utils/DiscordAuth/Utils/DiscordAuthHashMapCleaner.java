@@ -26,7 +26,9 @@ public class DiscordAuthHashMapCleaner implements ReloadBehaviour {
 
     private String ExpiredCodeMessage;
 
-    private Boolean DiscordOAuth2;
+    private final boolean DiscordOAuth2;
+
+    private final boolean RedirectExternally;
 
     @Inject
     public DiscordAuthHashMapCleaner( ProxyServer server, DatabaseDiscordMethods databaseDiscordMethods, DiscordAuthHashMap discordAuthHashMap, Config config){
@@ -38,6 +40,10 @@ public class DiscordAuthHashMapCleaner implements ReloadBehaviour {
         this.server = server;
 
         this.config = config;
+
+        this.DiscordOAuth2 = config.isDiscordOAuth2();
+
+        this.RedirectExternally = config.isRedirectExternally();
 
     }
 
@@ -58,7 +64,6 @@ public class DiscordAuthHashMapCleaner implements ReloadBehaviour {
     public void gettingData() {
 
         ExpiredCodeMessage = config.getExpiredCodeMessage();
-        DiscordOAuth2 = config.getDiscordOAuth2();
 
     }
 
@@ -77,7 +82,7 @@ public class DiscordAuthHashMapCleaner implements ReloadBehaviour {
 
                     Optional<Player> player = server.getPlayer(uuid);
 
-                    if(DiscordOAuth2){
+                    if(DiscordOAuth2 && RedirectExternally){
 
 
 
@@ -87,11 +92,7 @@ public class DiscordAuthHashMapCleaner implements ReloadBehaviour {
                                     if (discord_user_id == null){
 
                                         databaseDiscordMethods.executeStatement("DELETE FROM auth_codes WHERE uuid = ?",List.of(uuid.toString()),null)
-                                                .thenRun(() -> player.ifPresent(p->{
-
-                                                    p.sendMessage(Minimessage.MinimessagePlain(ExpiredCodeMessage));
-
-                                                }));
+                                                .thenRun(() -> player.ifPresent(p-> p.sendMessage(Minimessage.MinimessagePlain(ExpiredCodeMessage))));
 
                                     }
                                 });
@@ -100,11 +101,7 @@ public class DiscordAuthHashMapCleaner implements ReloadBehaviour {
                         return;
                     }
 
-                    player.ifPresent(p->{
-
-                        p.sendMessage(Minimessage.MinimessagePlain(ExpiredCodeMessage));
-
-                    });
+                    player.ifPresent(p-> p.sendMessage(Minimessage.MinimessagePlain(ExpiredCodeMessage)));
 
                     it.remove();
 

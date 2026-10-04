@@ -43,17 +43,17 @@ public class DiscordVerify extends ListenerAdapter {
 
         this.discordAuthDataHashMap = discordAuthHashMap.getDiscordAuthDataHashMap();
 
-        VerifyName = config.getVerifyName();
+        this.VerifyName = config.getVerifyName();
 
-        VerifyCodeVarName = config.getVerifyCodeVarName();
+        this.VerifyCodeVarName = config.getVerifyCodeVarName();
 
-        VerifyUUIDVarName = config.getVerifyUUIDVarName();
+        this.VerifyUUIDVarName = config.getVerifyUUIDVarName();
 
-        VerifyNoCode = config.getVerifyNoCode();
+        this.VerifyNoCode = config.getVerifyNoCode();
 
-        VerifyInvalidCode = config.getVerifyInvalidCode();
+        this.VerifyInvalidCode = config.getVerifyInvalidCode();
 
-        VerifySuccessCode = config.getVerifySuccessCode();
+        this.VerifySuccessCode = config.getVerifySuccessCode();
 
     }
 

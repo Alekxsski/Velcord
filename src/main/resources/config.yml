@@ -84,27 +84,29 @@ GuildId: ' your guild Id '
 #bot token of your chosen application
 BotToken: 'your bot token'
 
-
 #Pick the authorization system you can either use Discord OAuth2 based system where you have to set up your api callbacks
 #You have to know what are you doing in order to use such system also you have to connect to database on your own to change values in database
 # It's more complicated than using simple in-game authentication but provides smoother feeling for users
 # you can see more about it here and in plugin wiki
 # https://discord.com/developers/applications/1538653202063298731/oauth2 https://docs.discord.com/developers/topics/oauth2
 
-#Don't change the value unless you know what you're doing! better to stick with easier version if you don't feel fancy you also need to restart your server to change the mode!
+#Use DiscordOAuth2 or use discord command to verify
 DiscordOAuth2: false
 
-DiscordApiAuthUrl: 'https://discord.com/api/oauth2/authorize?client_id='
-
-DiscordApiBaseUrl: 'https://discord.com/api/v10'
+#Don't change the value unless you know what you're doing! better to stick with easier version if you don't feel fancy you also need to restart your server to change the mode!
+RedirectExternally: false
 
 #Redirect URL(URI) can be found on discord developer site and remember it must be one that's set on you're api application
+#URL has to be set to your minecraft ip(but remember https prefix is still necessary) or domain
 RedirectUrl: 'only needed if youre going to use OAuth2'
 
-#Client id of bot that performs actions after Redirect URL(URI) it can be id of application used in BotToken, although I strongly recommend creating another discord application
-#as it doesn't cost you anything and doubles your bandwidth of api calls made to the discord.
+#Port for your WebApi as it needs to be different from one that's being used by minecraft server
+WebApiPort: 8888
+
+#Client id of bot that performs actions after Redirect URL(URI).
 ClientId: 'only needed if youre going to use OAuth2'
 
+#Client secret of your app
 ClientSecret: 'client secret app'
 
 #Name of verification command on discord

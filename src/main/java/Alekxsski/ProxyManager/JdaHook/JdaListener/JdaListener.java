@@ -1,10 +1,8 @@
 package Alekxsski.ProxyManager.JdaHook.JdaListener;
 
-import Alekxsski.ProxyManager.JdaHook.Commands.DiscordVerify;
 import Alekxsski.ProxyManager.JdaHook.RolesManager.RolesManager;
 import Alekxsski.Utils.Config;
 import com.google.inject.Inject;
-import com.mysql.cj.log.Log;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.GenericEvent;

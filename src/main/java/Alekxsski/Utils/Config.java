@@ -53,7 +53,7 @@ public class Config implements ReloadBehaviour {
     private int MaxLifetime;
 
     @Getter
-    private String DiscordApiBaseUrl;
+    private final String DiscordApiBaseUrl;
 
     @Getter
     private String RedirectUrl;
@@ -104,7 +104,7 @@ public class Config implements ReloadBehaviour {
     private String DatabaseName;
 
     @Getter
-    private Boolean DiscordOAuth2;
+    private boolean DiscordOAuth2;
 
     @Getter
     private String BotToken;
@@ -143,13 +143,19 @@ public class Config implements ReloadBehaviour {
     private Map<String,String> RolesToSync;
 
     @Getter
-    private Boolean DefaultRole;
+    private boolean DefaultRole;
 
     @Getter
     private Boolean UserLeaveNickname;
 
     @Getter
     private String ClientSecret;
+
+    @Getter
+    private boolean RedirectExternally;
+
+    @Getter
+    private int WebApiPort;
 
     @Inject
     public Config(Logger logger, ProxyManagement proxyManagement, @DataDirectory Path dataDirectory){
@@ -159,6 +165,8 @@ public class Config implements ReloadBehaviour {
         this.proxyManagement = proxyManagement;
 
         this.dataDirectory = dataDirectory;
+
+        this.DiscordApiBaseUrl = "https://discord.com/api/";
 
         setUp();
 
@@ -224,15 +232,15 @@ public class Config implements ReloadBehaviour {
 
         MaximumPoolSize = config.getInt(Route.from("MaximumPoolSize"));
 
-        MinimumIdle = config.getInt(Route.from("MinumumIdle"));
+        MinimumIdle = config.getInt(Route.from("MinimumIdle"));
 
         IdleTimeout = config.getInt(Route.from("IdleTimeout"));
 
         MaxLifetime = config.getInt(Route.from("MaxLifetime"));
 
-        DiscordOAuth2 = config.getBoolean(Route.from("DiscordOAuth2"));
-
         BotToken = config.getString(Route.from("BotToken"));
+
+        ClientId = config.getString(Route.from("ClientId"));
 
         GuildId = config.getString(Route.from("GuildId"));
 
@@ -262,19 +270,21 @@ public class Config implements ReloadBehaviour {
 
         RolesToSync = settingRolesValues(config.getMapList("RolesToSync").getFirst());
 
+        RedirectExternally = config.getBoolean(Route.from("RedirectExternally"));
+
+        WebApiPort = config.getInt(Route.from("WebApiPort"));
+
+        DiscordOAuth2 = config.getBoolean(Route.from("DiscordOAuth2"));
+
     }
 
 
     @Override
     public void gettingData(){
 
-        DiscordApiBaseUrl = config.getString(Route.from("DiscordApiBaseUrl"));
-
         ErrorCodeMessage = config.getString(Route.from("error_code_message"));
 
         RedirectUrl = config.getString(Route.from("RedirectUrl"));
-
-        ClientId = config.getString(Route.from("ClientId"));
 
         ClickMessage = config.getString(Route.from("click_message"));
 
@@ -301,11 +311,7 @@ public class Config implements ReloadBehaviour {
         Map<String,String> roles = new HashMap<>() {
         };
 
-        rolemap.forEach((k,v) -> {
-
-            roles.put((String) k, (String) v);
-
-        });
+        rolemap.forEach((k,v) -> roles.put((String) k, (String) v));
 
         return roles;
     }

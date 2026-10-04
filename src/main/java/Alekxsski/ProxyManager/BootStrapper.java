@@ -6,6 +6,7 @@ import Alekxsski.ProxyManager.JdaHook.JdaHook;
 import Alekxsski.ProxyManager.StartingServices.CommandManagerVelcord;
 import Alekxsski.ProxyManager.StartingServices.TaskManager;
 import Alekxsski.Velcord;
+import Alekxsski.backend.SimpleApi.SimpleApi;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.slf4j.Logger;
@@ -19,10 +20,12 @@ public class BootStrapper {
     private final TaskManager taskManager;
     private final DatabaseManager databaseManager;
     private final LuckyListener luckyListener;
+    private final SimpleApi simpleApi;
 
     @Inject
     public BootStrapper(Logger logger, JdaHook jdaHook, CommandManagerVelcord commandManagerVelcord,
-                        TaskManager taskManager, DatabaseManager databaseManager, LuckyListener luckyListener) {
+                        TaskManager taskManager, DatabaseManager databaseManager,
+                        LuckyListener luckyListener, SimpleApi simpleApi) {
 
         this.logger = logger;
         this.jdaHook = jdaHook;
@@ -30,6 +33,7 @@ public class BootStrapper {
         this.taskManager = taskManager;
         this.databaseManager = databaseManager;
         this.luckyListener = luckyListener;
+        this.simpleApi = simpleApi;
 
     }
 
@@ -45,6 +49,8 @@ public class BootStrapper {
 
         luckyListener.hookLuckListener(plugin);
 
+        simpleApi.simpleApiHook();
+
         logger.info("Velcord successfuly enabled all addons");
 
     }
@@ -53,6 +59,7 @@ public class BootStrapper {
 
         databaseManager.shutDown();
         jdaHook.stop();
+        simpleApi.stop();
 
     }
 

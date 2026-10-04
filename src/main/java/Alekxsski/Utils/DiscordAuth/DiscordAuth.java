@@ -25,11 +25,11 @@ public class DiscordAuth implements ReloadBehaviour {
     private final ConcurrentHashMap<UUID, DiscordAuthData> discordAuthDataHashMap;
     private final LuckPermsManager luckPermsManager;
 
-    private String DiscordApiBaseUrl;
+    private final String DiscordApiBaseUrl;
 
-    private String RedirectUrl;
+    private final String RedirectUrl;
 
-    private String ClientId;
+    private final String ClientId;
 
     private String VerifyCodeVarName;
 
@@ -39,8 +39,9 @@ public class DiscordAuth implements ReloadBehaviour {
 
     private String ErrorCodeMessage;
 
+    private final boolean RedirectExternally;
 
-    private boolean DiscordOAuth2;
+    private final boolean DiscordOAuth2;
 
 
     private String ClickMessage;
@@ -53,6 +54,16 @@ public class DiscordAuth implements ReloadBehaviour {
         this.discordAuthDataHashMap = discordAuthHashMap.getDiscordAuthDataHashMap();
         this.discordAuthData = databaseDiscordMethods;
         this.luckPermsManager = luckPermsManager;
+
+        this.DiscordApiBaseUrl = config.getDiscordApiBaseUrl();
+
+        this.RedirectUrl = config.getRedirectUrl();
+
+        this.ClientId = config.getClientId();
+
+        this.DiscordOAuth2 = config.isDiscordOAuth2();
+
+        this.RedirectExternally = config.isRedirectExternally();
 
         setUp();
 
@@ -73,14 +84,6 @@ public class DiscordAuth implements ReloadBehaviour {
 
     @Override
     public void gettingData() {
-
-        DiscordApiBaseUrl = config.getDiscordApiBaseUrl();
-
-        RedirectUrl = config.getRedirectUrl();
-
-        ClientId = config.getClientId();
-
-        DiscordOAuth2 = config.getDiscordOAuth2();
 
         VerifyCodeVarName = config.getVerifyCodeVarName();
 
@@ -112,7 +115,7 @@ public class DiscordAuth implements ReloadBehaviour {
 
             discordAuthDataHashMap.put(player_uuid,new DiscordAuthData(url,code));
 
-                if(DiscordOAuth2) {
+                if(DiscordOAuth2 && RedirectExternally) {
 
                     LuckPlayerData playerData = luckPermsManager.getActivePlayerData(player_uuid);
 
@@ -144,7 +147,7 @@ public class DiscordAuth implements ReloadBehaviour {
 
         if (DiscordOAuth2) {
 
-            click_string = String.format("%s%s&redirect_uri=%s&response_type=code&scope=identify%%20guilds.join&state=%s",DiscordApiBaseUrl, ClientId, RedirectUrl, code);
+            click_string = String.format("%soauth2/authorize?client_id=%s&redirect_uri=%s&response_type=code&scope=identify%%20guilds.join&state=%s",DiscordApiBaseUrl, ClientId, RedirectUrl, code);
             action = "open_url";
 
         }

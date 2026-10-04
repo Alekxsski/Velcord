@@ -93,6 +93,7 @@ public class DiscordVerify implements SimpleCommand, ReloadBehaviour {
                 UUID player_uuid = player.getUniqueId();
 
 
+                //Check if user is already registered in database
                 databaseDiscordMethods.executeStatement("SELECT discord_user_id FROM minecraft_to_discord WHERE uuid = ?",
                         List.of(player_uuid.toString()), "discord_user_id")
                         .thenAccept(user_discord_id -> {

@@ -43,7 +43,11 @@ public class LuckyListener {
 
                             if (discordUserId != null) {
 
-                                rolesManager.checkMember(discordUserId, user.getUsername(), user.getPrimaryGroup());
+                                try {
+                                    rolesManager.checkMember(discordUserId, user.getUsername(), user.getPrimaryGroup());
+                                } catch (Exception e) {
+                                    throw new RuntimeException(e);
+                                }
 
                             }
 
