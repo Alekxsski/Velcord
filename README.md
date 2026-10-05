@@ -13,7 +13,7 @@ Velcord provides oppurtinity to use only one plugin on your proxy server to mana
 
 - **Verification modes 🔐**
     - Locally handled codes
-    - Discord OAuth2 auth-generated urls
+    - Discord OAuth2 auth-generated urls(and handled localy)
 
 - **Discord member synchronization ⇄**
     - Nickname 
@@ -29,18 +29,23 @@ Velcord provides oppurtinity to use only one plugin on your proxy server to mana
 
 ## Things you need to have in order for plugin to work 🛠️
 
-### Locally
+### Discord command /verify
 
 - LuckPerms installed 
 - Discord developer account
 - One discord application
 
-### Using discord OAuth2
+### Discord OAuth2 using plugin WebApi that happens localy
 
-- LuckPerms installed 
-- Discord developer account
-- fully built api endpoint that will handle OAuth2 requests and connect accounts externally. Working api can be found [here](https://github.com/Alekxsski/Discord_Auth) and is also possible to modify it's behaviour up on user authorization. You always can always develop your own api based on this example.
-- One discord application(Two separate application are strongly advised as discord may limit your requests)
+- As shown above you just need to change some lines in config
+- One more available port that'll be used by api
+
+
+### Discord OAuth2 using external WebApi(yours!)
+- Custom built web api that will exchange user token, fetch member id, invite user, update his roles upon invite and lastly change his nickname.
+- Example WebApi is presented and production ready [here](https://github.com/Alekxsski/Discord_Auth)
+
+
 
 
 
