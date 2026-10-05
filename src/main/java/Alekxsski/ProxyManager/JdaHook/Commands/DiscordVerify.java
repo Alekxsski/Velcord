@@ -85,7 +85,7 @@ public class DiscordVerify extends ListenerAdapter {
                 databaseDiscordMethods.executeStatement("INSERT INTO player_discord (uuid, discord_user_id) VALUES (?, ?)", List.of(uuid.toString(),userId),null)
                         .thenRun(() ->{
 
-                            rolesManager.MemberUpdateUUID(userId,uuid);
+                            rolesManager.makeMemberUpdateUUID(userId,uuid);
                             discordAuthDataHashMap.remove(uuid);
 
                             event.getHook().sendMessage(VerifySuccessCode).queue();

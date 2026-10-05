@@ -151,7 +151,7 @@ public class DiscordVerify implements SimpleCommand, ReloadBehaviour {
             databaseDiscordMethods.executeStatement("DELETE FROM player_discord WHERE uuid = ?",
                     List.of(player_uuid.toString()),null).thenRun(()-> {
 
-                rolesManager.MemberBackToDefault(user_discord_id);
+                rolesManager.setMemberBackToDefault(user_discord_id);
 
                 player.sendMessage(Minimessage.MinimessagePlain(DisconnectedMessage));
 

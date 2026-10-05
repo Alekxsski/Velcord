@@ -6,9 +6,7 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import lombok.Setter;
 import Alekxsski.Utils.Config;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.*;
 import org.slf4j.Logger;
 
 import java.util.*;
@@ -86,8 +84,34 @@ public class RolesManager {
 
     }
 
+    private void addPrimaryRolesToList(Role primary_role, List<Role> MemberRolesList){
 
-    private List<Role> getMemberOtherRoles(List<Role> MemberRoles){
+        Role default_role = RolesToSyncConverted.get("default");
+
+        addBaseRoleToList(MemberRolesList);
+
+        if(primary_role != null){
+
+            if (primary_role == default_role){
+
+                MemberRolesList.add(default_role);
+
+            }
+
+            else {
+
+                MemberRolesList.add(primary_role);
+
+                if(DefaultRole) MemberRolesList.add(default_role);
+
+            }
+
+        }
+
+    }
+
+
+    private List<Role> getMemberUnsychronizedRoles(List<Role> MemberRoles){
 
         MemberRoles.removeIf(role ->
                 RolesToSyncConverted.containsValue(role)
@@ -97,46 +121,28 @@ public class RolesManager {
 
     }
 
-    public void checkMember(String user_discord_id,String user_mc_name,String primary_role) throws Exception {
+    public void checkExistingMemberRoles(Member member, String primary_group) throws Exception {
 
-        Member member = guild.getMemberById(user_discord_id);
-        if (member != null && canModify(member)){
+        List<Role> MemberActiveRoles = getMemberUnsychronizedRoles(new ArrayList<>(member.getRoles()));
 
-            checkMemberNick(member, user_mc_name);
+        if(primary_group != null){
 
-            checkMemberRoles(member,primary_role);
+            Role primary_role = RolesToSyncConverted.get(primary_group);
 
+            givePrimaryRole(primary_role,MemberActiveRoles,member);
+
+        }
+
+        else{
+
+            throw new Exception("Primary group wasn't found");
 
         }
 
 
     }
 
-    public void checkMemberRoles(Member member, String primary_group) throws Exception {
-
-        List<Role> MemberActiveRoles = getMemberOtherRoles(new ArrayList<>(member.getRoles()));
-
-            if(primary_group != null){
-
-                Role primary_role = RolesToSyncConverted.get(primary_group);
-
-                givePrimaryRole(primary_role,MemberActiveRoles,member);
-
-            }
-
-            else{
-
-                throw new Exception("Primary group wasn't found");
-
-            }
-
-
-    }
-
-
-
-
-    public void checkMemberNick(Member member, String user_mc_name){
+    public void checkExistingMemberNick(Member member, String user_mc_name){
 
         String member_nick = member.getNickname();
 
@@ -148,7 +154,52 @@ public class RolesManager {
 
     }
 
-    public void MemberBackToDefault(String user_discord_id){
+    public void checkExistingMember(String user_discord_id, String user_mc_name, String primary_role) throws Exception {
+
+        Member member = guild.getMemberById(user_discord_id);
+        if (member != null && canModify(member)){
+
+            checkExistingMemberNick(member, user_mc_name);
+
+            checkExistingMemberRoles(member,primary_role);
+
+
+        }
+
+
+    }
+
+    private void addNewMember(UserSnowflake user,String user_mc_name,String primary_group, String accessToken) {
+
+        List<Role> rolesToBeAdded = new ArrayList<>();
+
+        Role primary_role = RolesToSyncConverted.get(primary_group);
+
+        addPrimaryRolesToList(primary_role,rolesToBeAdded);
+
+        guild.addMember(accessToken,user).setNickname(user_mc_name).setRoles(rolesToBeAdded).queue();
+
+    }
+
+    public void OAuth2Member(String user_discord_id,String user_mc_name,String primary_group, String accessToken) throws Exception {
+
+        UserSnowflake user = UserSnowflake.fromId(user_discord_id);
+
+        if(!guild.isMember(user)){
+
+            addNewMember(user,user_mc_name,primary_group,accessToken);
+
+        }
+        else{
+
+            checkExistingMember(user_discord_id,user_mc_name,primary_group);
+
+        }
+
+    }
+
+
+    public void setMemberBackToDefault(String user_discord_id){
 
         Member member = guild.getMemberById(user_discord_id);
 
@@ -156,7 +207,7 @@ public class RolesManager {
 
             if (!UserLeaveNickname) guild.modifyNickname(member,null).queue();
 
-            List<Role> MemberActiveRoles = getMemberOtherRoles(new ArrayList<>(member.getRoles()));
+            List<Role> MemberActiveRoles = getMemberUnsychronizedRoles(new ArrayList<>(member.getRoles()));
 
             addBaseRoleToList(MemberActiveRoles);
 
@@ -167,13 +218,13 @@ public class RolesManager {
     }
 
 
-    public void MemberUpdateUUID(String user_discord_id, UUID uuid){
+    public void makeMemberUpdateUUID(String user_discord_id, UUID uuid){
 
         Optional<Player> player = server.getPlayer(uuid);
 
         player.ifPresent(value -> {
             try {
-                MemberUpdateName(user_discord_id, value.getUsername());
+                makeMemberUpdatePlayerName(user_discord_id, value.getUsername());
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -181,15 +232,15 @@ public class RolesManager {
 
     }
 
-    public void MemberUpdateName(String user_discord_id,String user_mc_name) throws Exception {
+    public void makeMemberUpdatePlayerName(String user_discord_id, String user_mc_name) throws Exception {
 
         Member member = guild.getMemberById(user_discord_id);
 
         if (member != null && canModify(member)) {
 
-            checkMemberNick(member,user_mc_name);
+            checkExistingMemberNick(member,user_mc_name);
 
-            checkMemberRoles(member,user_discord_id);
+            checkExistingMemberRoles(member,user_discord_id);
 
         }
 
@@ -197,27 +248,12 @@ public class RolesManager {
 
     private void givePrimaryRole(Role primary_role, List<Role> MemberOtherRoles, Member member){
 
-        Role default_role = RolesToSyncConverted.get("default");
+        addPrimaryRolesToList(primary_role,MemberOtherRoles);
 
-        if(primary_role != null){
-
-            if (primary_role == default_role){
-
-                MemberOtherRoles.add(default_role);
-
-            }
-
-            else {
-
-                MemberOtherRoles.add(primary_role);
-
-                if(DefaultRole) MemberOtherRoles.add(default_role);
-
-            }
-
-        }
         guild.modifyMemberRoles(member,MemberOtherRoles).queue();
+
     }
+
 
     private boolean canModify(Member member){
 

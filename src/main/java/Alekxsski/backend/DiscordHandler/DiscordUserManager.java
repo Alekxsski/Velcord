@@ -7,7 +7,6 @@ import Alekxsski.ProxyManager.JdaHook.RolesManager.RolesManager;
 import Alekxsski.Utils.Config;
 import Alekxsski.backend.DiscordHandler.DataUtils.ResponseData;
 import com.google.inject.Inject;
-import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,19 +19,17 @@ public class DiscordUserManager {
 
     private final RolesManager rolesManager;
     private final DiscordApi discordApi;
-    private final Logger logger;
     private final ExecutorService DiscordUserManagerThreads;
     private final  LuckPermsManager luckPermsManager;
     private final DatabaseDiscordMethods databaseDiscordMethods;
 
 
     @Inject
-    public DiscordUserManager(RolesManager rolesManager, DiscordApi discordApi, Logger logger, Config config,
+    public DiscordUserManager(RolesManager rolesManager, DiscordApi discordApi, Config config,
                               LuckPermsManager luckPermsManager, DatabaseDiscordMethods databaseDiscordMethods){
 
         this.discordApi = discordApi;
         this.rolesManager = rolesManager;
-        this.logger = logger;
         this.DiscordUserManagerThreads = Executors.newFixedThreadPool(config.getMaximumPoolSize());
         this.luckPermsManager = luckPermsManager;
         this.databaseDiscordMethods = databaseDiscordMethods;
@@ -54,7 +51,9 @@ public class DiscordUserManager {
 
                 }
 
-                response = discordApi.getMemberId(response.value());
+                String accessToken = response.value();
+
+                response = discordApi.getMemberId(accessToken);
 
                 LuckPlayerData luckPlayerData = luckPermsManager.getActivePlayerData(player_uuid);
 
@@ -63,7 +62,7 @@ public class DiscordUserManager {
                     databaseDiscordMethods.executeStatement("INSERT INTO player_discord (uuid, discord_user_id) VALUES (?, ?)",
                             List.of(player_uuid.toString(), response.value()),null);
 
-                    rolesManager.checkMember(response.value(), luckPlayerData.playerName(), luckPlayerData.primaryGroup());
+                    rolesManager.OAuth2Member(response.value(), luckPlayerData.playerName(), luckPlayerData.primaryGroup(),accessToken);
 
                 }
 
