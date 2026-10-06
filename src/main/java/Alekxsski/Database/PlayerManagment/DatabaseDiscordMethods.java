@@ -7,6 +7,7 @@ import Alekxsski.Database.DatabaseManager;
 import java.sql.*;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 @Singleton
 public class DatabaseDiscordMethods {
@@ -60,7 +61,9 @@ public class DatabaseDiscordMethods {
                 else statement.executeUpdate();
 
             } catch (Exception e) {
-                throw new RuntimeException(e);
+
+                throw new CompletionException(e);
+
             }
 
             return optional_value_from_query;

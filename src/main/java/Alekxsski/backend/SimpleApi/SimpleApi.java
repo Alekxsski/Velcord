@@ -1,5 +1,6 @@
 package Alekxsski.backend.SimpleApi;
 
+import Alekxsski.ProxyManager.ProxyManagement;
 import Alekxsski.Utils.Config;
 import Alekxsski.Utils.DiscordAuth.Utils.DiscordAuthData;
 import Alekxsski.Utils.DiscordAuth.Utils.DiscordAuthHashMap;
@@ -17,11 +18,12 @@ public class SimpleApi {
     private Javalin simpleApiJavalin;
     private final DiscordUserManager discordUserManager;
     private final Config config;
+    private final ProxyManagement proxyManagement;
     private final ConcurrentHashMap<String, UUID> discordCodeHashMap;
     private final ConcurrentHashMap<UUID, DiscordAuthData> discordAuthHashMap;
 
     @Inject
-    public SimpleApi(DiscordUserManager discordUserManager, Config config, DiscordAuthHashMap discordAuthHashMap){
+    public SimpleApi(DiscordUserManager discordUserManager, Config config, DiscordAuthHashMap discordAuthHashMap, ProxyManagement proxyManagement){
 
         this.discordUserManager = discordUserManager;
 
@@ -31,6 +33,8 @@ public class SimpleApi {
 
         this.discordAuthHashMap = discordAuthHashMap.getDiscordAuthDataHashMap();
 
+        this.proxyManagement = proxyManagement;
+
 
     }
 
@@ -38,6 +42,7 @@ public class SimpleApi {
 
         //Callback api extension
         simpleApiJavalin = Javalin.create(config1 -> {
+
             config1.routes.get("/callback", ctx -> {
 
                 String code = ctx.queryParam("code");
@@ -47,7 +52,7 @@ public class SimpleApi {
 
                     // If one of the queries is null return 400 status code and error message
                     if(state == null || code == null) {
-                        ctx.status(400).result("Once of the required values wasn't provided!");
+                        ctx.status(400).result("One of the required values wasn't provided!");
                         return null;
                     }
 
@@ -55,6 +60,13 @@ public class SimpleApi {
                     if(discordCodeHashMap.containsKey(state)){
 
                         UUID player_uuid = discordCodeHashMap.get(state);
+
+                        if(proxyManagement.isPlayerActive(player_uuid)){
+
+                            ctx.status(401).result("You have to be on minecraft server to use OAuth2");
+                            return null;
+
+                        }
 
                         discordCodeHashMap.remove(state);
 
