@@ -4,6 +4,7 @@ import Alekxsski.Database.DatabaseManager;
 import Alekxsski.LuckPerms.LuckyListener.LuckyListener;
 import Alekxsski.ProxyManager.JdaHook.JdaHook;
 import Alekxsski.ProxyManager.StartingServices.CommandManagerVelcord;
+import Alekxsski.ProxyManager.StartingServices.EventListenerManager;
 import Alekxsski.ProxyManager.StartingServices.TaskManager;
 import Alekxsski.Velcord;
 import Alekxsski.backend.SimpleApi.SimpleApi;
@@ -21,11 +22,12 @@ public class BootStrapper {
     private final DatabaseManager databaseManager;
     private final LuckyListener luckyListener;
     private final SimpleApi simpleApi;
+    private final EventListenerManager eventListenerManager;
 
     @Inject
     public BootStrapper(Logger logger, JdaHook jdaHook, CommandManagerVelcord commandManagerVelcord,
                         TaskManager taskManager, DatabaseManager databaseManager,
-                        LuckyListener luckyListener, SimpleApi simpleApi) {
+                        LuckyListener luckyListener, SimpleApi simpleApi, EventListenerManager eventListenerManager) {
 
         this.logger = logger;
         this.jdaHook = jdaHook;
@@ -34,12 +36,15 @@ public class BootStrapper {
         this.databaseManager = databaseManager;
         this.luckyListener = luckyListener;
         this.simpleApi = simpleApi;
+        this.eventListenerManager = eventListenerManager;
 
     }
 
     public void Hook(Velcord plugin) {
 
         commandManagerVelcord.registerCommands(plugin);
+
+        eventListenerManager.registerListener(plugin);
 
         databaseManager.initialize();
 
@@ -57,9 +62,10 @@ public class BootStrapper {
 
     public void shutDown(){
 
-        databaseManager.shutDown();
-        jdaHook.stop();
         simpleApi.stop();
+        jdaHook.stop();
+        databaseManager.shutDown();
+
 
     }
 

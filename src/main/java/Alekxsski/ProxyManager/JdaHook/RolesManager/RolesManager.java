@@ -159,9 +159,9 @@ public class RolesManager {
         Member member = guild.getMemberById(user_discord_id);
         if (member != null && canModify(member)){
 
-            checkExistingMemberNick(member, user_mc_name);
+            if(primary_role != null) checkExistingMemberNick(member, user_mc_name);
 
-            checkExistingMemberRoles(member,primary_role);
+            if (user_mc_name != null) checkExistingMemberRoles(member,primary_role);
 
 
         }

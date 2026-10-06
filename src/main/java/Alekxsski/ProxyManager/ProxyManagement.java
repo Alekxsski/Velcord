@@ -7,6 +7,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import org.slf4j.Logger;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Singleton
 public class ProxyManagement {
@@ -21,7 +22,7 @@ public class ProxyManagement {
 
         this.server = server;
         this.logger = logger;
-        CheckLuckPerms();
+        checkLuckPerms();
 
     }
 
@@ -34,7 +35,7 @@ public class ProxyManagement {
         container.ifPresent(pluginContainer -> pluginContainer.getExecutorService().shutdown());
     }
 
-    public void CheckLuckPerms() {
+    public void checkLuckPerms() {
 
         if (!server.getPluginManager().isLoaded("luckperms")){
 
@@ -43,6 +44,12 @@ public class ProxyManagement {
         }
 
         logger.info("Successfully hooked into luckperms");
+
+    }
+
+    public boolean isPlayerActive(UUID player_uuid){
+
+        return server.getPlayer(player_uuid).isPresent();
 
     }
 

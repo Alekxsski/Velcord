@@ -1,12 +1,15 @@
 package Alekxsski.LuckPerms;
 
 import com.google.inject.Inject;
+import com.velocitypowered.api.proxy.Player;
+import com.velocitypowered.api.proxy.ProxyServer;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.model.user.UserManager;
 import org.slf4j.Logger;
 
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -14,11 +17,13 @@ public class LuckPermsManager {
 
     private LuckPerms luckApi = null;
     private final Logger logger;
+    private final ProxyServer server;
 
     @Inject
-    public LuckPermsManager(Logger logger){
+    public LuckPermsManager(Logger logger, ProxyServer server){
 
         this.logger = logger;
+        this.server = server;
 
     }
 
@@ -43,6 +48,8 @@ public class LuckPermsManager {
 
             User user = userManager.getUser(player_uuid);
 
+            Optional<Player> player = server.getPlayer(player_uuid);
+
             if(user == null) {
 
                 logger.error("Player data couldn't be fetched from luckperms!");
@@ -50,7 +57,21 @@ public class LuckPermsManager {
 
             }
 
-            return new LuckPlayerData(user.getUsername(), user.getPrimaryGroup());
+            String player_name = user.getUsername();
+
+            if(player.isPresent()){
+
+                player_name = player.get().getUsername();
+
+            }
+
+            else{
+
+                logger.warn("Player wasn't on server while fetching username from proxy. Data will be fetched from luck perms api(username will be in lowercase)");
+
+            }
+
+            return new LuckPlayerData(player_name, user.getPrimaryGroup());
 
 
     }

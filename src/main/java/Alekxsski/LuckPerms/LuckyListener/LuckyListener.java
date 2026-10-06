@@ -44,7 +44,7 @@ public class LuckyListener {
                             if (discordUserId != null) {
 
                                 try {
-                                    rolesManager.checkExistingMember(discordUserId, user.getUsername(), user.getPrimaryGroup());
+                                    rolesManager.checkExistingMember(discordUserId, null, user.getPrimaryGroup());
                                 } catch (Exception e) {
                                     throw new RuntimeException(e);
                                 }
