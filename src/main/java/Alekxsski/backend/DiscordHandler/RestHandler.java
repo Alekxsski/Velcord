@@ -1,24 +1,17 @@
 package Alekxsski.backend.DiscordHandler;
 import Alekxsski.Utils.Config;
 import com.google.inject.Inject;
-import org.asynchttpclient.AsyncHttpClient;
-import org.asynchttpclient.BoundRequestBuilder;
-import org.asynchttpclient.Request;
-import org.asynchttpclient.Response;
 import org.slf4j.Logger;
 
+import java.io.IOException;
+import java.net.URI;
 import java.net.http.HttpClient;
-import java.time.Duration;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ExecutionException;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
-import static org.asynchttpclient.Dsl.*;
 
 //Class provides most of necessary functionalities that would be needed to exchange tokens with discord or other api
 public class RestHandler {
-
-    private AsyncHttpClient client = null;
 
     private HttpClient httpClient = null;
 
@@ -35,25 +28,7 @@ public class RestHandler {
     }
 
     //Creation of the AsyncHttpClient for application
-    private AsyncHttpClient getClient(){
-
-        if (client == null){
-
-            client = asyncHttpClient(config()
-                    .setConnectTimeout(Duration.ofSeconds(5))
-                    .setRequestTimeout(Duration.ofSeconds(10))
-                    .setMaxConnections(50)
-                    .setMaxConnectionsPerHost(10)
-                    .setCompressionEnforced(true));
-
-            System.out.println("Client initialized");
-        }
-
-        return client;
-
-    }
-
-    private HttpClient getClient_(){
+    private HttpClient getClient(){
 
         if (httpClient == null){
 
@@ -67,53 +42,32 @@ public class RestHandler {
     }
 
     //Method provides interface to establish requests with api
-    public Optional<Response> makeRequest(String method, String url, Map<CharSequence,String>headers, Map<String,String>params, String body) throws ExecutionException, InterruptedException {
+    public HttpResponse<String> makeRequest(String method, String url, String[] headers, String body) throws InterruptedException, IOException {
 
-            Response response;
+        HttpClient httpClient = getClient();
 
-            AsyncHttpClient client = getClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .method(method, body != null ?  HttpRequest.BodyPublishers.ofString(body): HttpRequest.BodyPublishers.noBody())
+                .uri(fullUrl(url))
+                .headers(headers)
+                .build();
 
-
-                BoundRequestBuilder preparedResponse = client.prepare(method,fullUrl(url));
-
-                if (headers != null) headers.forEach(preparedResponse::addHeader);
-
-                if(params != null) params.forEach(preparedResponse::addQueryParam);
-
-                if(body != null) preparedResponse.setBody(body);
-
-                response = preparedResponse.execute().get();
-
-
-            return Optional.ofNullable(response);
-
-    }
-
-    public void makeRequest_(String method, String url, Map<CharSequence,String>headers, Map<String,String>params, String body) throws ExecutionException, InterruptedException {
-
-        //HttpClient httpClient = getClient_();
-
-        //HttpRequest.BodyPublishers.
-
-        //HttpRequest request = HttpRequest.newBuilder().method(method,body)
-
-       // httpClient.send()
+        return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
     }
 
     //Fix api route
-    private String fullUrl(String url){
+    private URI fullUrl(String url){
 
-        return String.format("%sv10/%s",DiscordApiBaseUrl,url);
+        return URI.create(String.format("%sv10/%s",DiscordApiBaseUrl,url));
 
     }
 
-    private void debugResponse(Request request){
+    private void debugResponse(HttpRequest request){
 
-        logger.info("Method: {}", request.getMethod());
-        logger.info("URL: {}", request.getUrl());
-        logger.info("Headers: {}", request.getHeaders());
-        logger.info("Body: {}", request.getStringData());
+        logger.info("Method: {}", request.method());
+        logger.info("URL: {}", request.uri());
+        logger.info("Headers: {}", request.headers());
 
     }
 

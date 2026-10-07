@@ -5,12 +5,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
-import org.asynchttpclient.Response;
 import Alekxsski.backend.DiscordHandler.DataUtils.ResponseData;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ExecutionException;
+import java.io.IOException;
+import java.net.http.HttpResponse;
 
 //Class provide Human readable and consistent requests using RestHandler Class
 public class DiscordApi {
@@ -44,9 +42,9 @@ public class DiscordApi {
     }
 
     //Based on the validation of the Authorization code method returns status code of the request and access token
-    public ResponseData getUserAccessToken(String authorizationCode) throws ExecutionException, InterruptedException, JsonProcessingException {
+    public ResponseData getUserAccessToken(String authorizationCode) throws InterruptedException, IOException {
 
-        Map<CharSequence,String> headers = Map.of("Content-Type", "application/x-www-form-urlencoded");
+        String[] headers = {"Content-Type", "application/x-www-form-urlencoded"};
 
         String body = String.format(
                 "client_id=%s&client_secret=%s&grant_type=authorization_code&code=%s&redirect_uri=%s",
@@ -56,44 +54,27 @@ public class DiscordApi {
                 RedirectUrl
         );
 
-        Optional<Response> responseOptional = restHandler.makeRequest("POST","oauth2/token", headers,null,body);
+        HttpResponse<String> response = restHandler.makeRequest("POST","oauth2/token", headers,body);
 
-        if(responseOptional.isPresent()){
 
-            Response response = responseOptional.get();
+        return readJson(response.statusCode(),response.body(),"access_token");
 
-            if(response.getStatusCode() == 200){
 
-                return readJson(response.getStatusCode(),response.getResponseBody(),"access_token");
-
-            }
-
-            return new ResponseData(response.getStatusCode(),response.getResponseBody());
-
-        }
-
-        return null;
 
     }
 
     //Using users access token method returns member id that's required for further user management
-    public ResponseData getMemberId(String UserAuthorizationToken) throws ExecutionException, InterruptedException, JsonProcessingException {
+    public ResponseData getMemberId(String UserAuthorizationToken) throws InterruptedException, IOException {
 
-        Map<CharSequence,String> headers = Map.of("Authorization", String.format("Bearer %s",UserAuthorizationToken));
-
-
-        Optional<Response> responseOptional = restHandler.makeRequest("GET","users/@me", headers,null,null);
+        String[] headers = {"Authorization", String.format("Bearer %s",UserAuthorizationToken)};
 
 
-        if(responseOptional.isPresent()){
+        HttpResponse<String> response = restHandler.makeRequest("GET","users/@me", headers,"");
 
-            Response response = responseOptional.get();
 
-            return readJson(response.getStatusCode(),response.getResponseBody(),"id");
 
-        }
+        return readJson(response.statusCode(),response.body(),"id");
 
-        return null;
 
     }
 

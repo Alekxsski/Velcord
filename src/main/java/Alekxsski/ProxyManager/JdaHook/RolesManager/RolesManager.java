@@ -157,11 +157,13 @@ public class RolesManager {
     public void checkExistingMember(String user_discord_id, String user_mc_name, String primary_role) throws Exception {
 
         Member member = guild.getMemberById(user_discord_id);
+
         if (member != null && canModify(member)){
 
-            if(primary_role != null) checkExistingMemberNick(member, user_mc_name);
 
-            if (user_mc_name != null) checkExistingMemberRoles(member,primary_role);
+            if(user_mc_name != null) checkExistingMemberNick(member, user_mc_name);
+
+            if (primary_role != null) checkExistingMemberRoles(member,primary_role);
 
 
         }

@@ -5,7 +5,6 @@ import Alekxsski.ProxyManager.JdaHook.RolesManager.RolesManager;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.PostLoginEvent;
-import com.velocitypowered.api.event.player.ServerPostConnectEvent;
 import com.velocitypowered.api.proxy.Player;
 
 import java.util.List;
