@@ -97,7 +97,6 @@ public class SimpleApi {
                                     ctx.status(500).result("Internal error" + ex.getMessage());
                                     return null;
 
-
                                 });
 
                     }
