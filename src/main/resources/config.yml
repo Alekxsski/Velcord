@@ -101,6 +101,9 @@ RedirectExternally: false
 #URL has to be set to your minecraft ip(but remember https prefix is still necessary) or domain
 RedirectUrl: 'only needed if youre going to use OAuth2'
 
+#Change if you need to you can always use nginx reverse proxy etc.
+WebApiHost: "127.0.0.1"
+
 #Only activated if DiscordOAuth2 is set to true and RedirectExternally is set to false
 #Port for your WebApi as it needs to be different from one that's being used by minecraft server
 WebApiPort: 8888

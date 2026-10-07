@@ -4,7 +4,6 @@ import Alekxsski.Database.PlayerManagment.DatabaseDiscordMethods;
 import Alekxsski.LuckPerms.LuckPermsManager;
 import Alekxsski.LuckPerms.LuckPlayerData;
 import Alekxsski.ProxyManager.JdaHook.RolesManager.RolesManager;
-import Alekxsski.Utils.Config;
 import Alekxsski.backend.DiscordHandler.DataUtils.ResponseData;
 import com.google.inject.Inject;
 
@@ -25,12 +24,12 @@ public class DiscordUserManager {
 
 
     @Inject
-    public DiscordUserManager(RolesManager rolesManager, DiscordApi discordApi, Config config,
+    public DiscordUserManager(RolesManager rolesManager, DiscordApi discordApi,
                               LuckPermsManager luckPermsManager, DatabaseDiscordMethods databaseDiscordMethods){
 
         this.discordApi = discordApi;
         this.rolesManager = rolesManager;
-        this.DiscordUserManagerThreads = Executors.newFixedThreadPool(config.getMaximumPoolSize());
+        this.DiscordUserManagerThreads = Executors.newFixedThreadPool(1);
         this.luckPermsManager = luckPermsManager;
         this.databaseDiscordMethods = databaseDiscordMethods;
 

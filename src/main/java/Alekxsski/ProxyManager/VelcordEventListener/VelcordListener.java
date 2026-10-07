@@ -2,7 +2,9 @@ package Alekxsski.ProxyManager.VelcordEventListener;
 
 import Alekxsski.Database.PlayerManagment.DatabaseDiscordMethods;
 import Alekxsski.ProxyManager.JdaHook.RolesManager.RolesManager;
+import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.connection.PostLoginEvent;
 import com.velocitypowered.api.event.player.ServerPostConnectEvent;
 import com.velocitypowered.api.proxy.Player;
 
@@ -13,6 +15,7 @@ public class VelcordListener{
     private final DatabaseDiscordMethods databaseDiscordMethods;
     private final RolesManager rolesManager;
 
+    @Inject
     public VelcordListener(DatabaseDiscordMethods databaseDiscordMethods,RolesManager rolesManager){
 
         this.databaseDiscordMethods = databaseDiscordMethods;
@@ -21,11 +24,9 @@ public class VelcordListener{
     }
 
     @Subscribe
-    public void OnPlayerJoin(ServerPostConnectEvent event){
+    public void OnPlayerJoin(PostLoginEvent event){
         
         Player player = event.getPlayer();
-
-        System.out.println("fired now");
 
         databaseDiscordMethods.executeStatement("SELECT discord_user_id FROM player_discord WHERE uuid =?", List.of(String.valueOf(player.getUniqueId())), "discord_user_id")
                 .thenAccept(discordUserId -> {

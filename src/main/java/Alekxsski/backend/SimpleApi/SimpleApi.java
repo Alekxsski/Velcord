@@ -11,7 +11,8 @@ import io.javalin.Javalin;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class SimpleApi {
@@ -35,7 +36,6 @@ public class SimpleApi {
         this.discordAuthHashMap = discordAuthHashMap.getDiscordAuthDataHashMap();
 
         this.proxyManagement = proxyManagement;
-
 
     }
 
@@ -120,7 +120,7 @@ public class SimpleApi {
         if(!config.isRedirectExternally() && config.isDiscordOAuth2()){
 
             setUp();
-            simpleApiJavalin.start("0.0.0.0", config.getWebApiPort());
+            simpleApiJavalin.start(config.getWebApiHost(), config.getWebApiPort());
 
         }
 

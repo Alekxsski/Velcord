@@ -157,6 +157,9 @@ public class Config implements ReloadBehaviour {
     @Getter
     private int WebApiPort;
 
+    @Getter
+    private String WebApiHost;
+
     @Inject
     public Config(Logger logger, ProxyManagement proxyManagement, @DataDirectory Path dataDirectory){
 
@@ -273,6 +276,8 @@ public class Config implements ReloadBehaviour {
         RedirectExternally = config.getBoolean(Route.from("RedirectExternally"));
 
         WebApiPort = config.getInt(Route.from("WebApiPort"));
+
+        WebApiHost = config.getString(Route.from("WebApiHost"));
 
         DiscordOAuth2 = config.getBoolean(Route.from("DiscordOAuth2"));
 

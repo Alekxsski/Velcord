@@ -7,6 +7,7 @@ import org.asynchttpclient.Request;
 import org.asynchttpclient.Response;
 import org.slf4j.Logger;
 
+import java.net.http.HttpClient;
 import java.time.Duration;
 import java.util.Map;
 import java.util.Optional;
@@ -18,6 +19,8 @@ import static org.asynchttpclient.Dsl.*;
 public class RestHandler {
 
     private AsyncHttpClient client = null;
+
+    private HttpClient httpClient = null;
 
     private final String DiscordApiBaseUrl;
 
@@ -50,6 +53,19 @@ public class RestHandler {
 
     }
 
+    private HttpClient getClient_(){
+
+        if (httpClient == null){
+
+            httpClient = HttpClient.newHttpClient();
+
+            System.out.println("Client initialized");
+        }
+
+        return httpClient;
+
+    }
+
     //Method provides interface to establish requests with api
     public Optional<Response> makeRequest(String method, String url, Map<CharSequence,String>headers, Map<String,String>params, String body) throws ExecutionException, InterruptedException {
 
@@ -70,6 +86,18 @@ public class RestHandler {
 
 
             return Optional.ofNullable(response);
+
+    }
+
+    public void makeRequest_(String method, String url, Map<CharSequence,String>headers, Map<String,String>params, String body) throws ExecutionException, InterruptedException {
+
+        //HttpClient httpClient = getClient_();
+
+        //HttpRequest.BodyPublishers.
+
+        //HttpRequest request = HttpRequest.newBuilder().method(method,body)
+
+       // httpClient.send()
 
     }
 
