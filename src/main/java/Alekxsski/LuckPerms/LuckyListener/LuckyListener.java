@@ -29,6 +29,7 @@ public class LuckyListener {
 
     }
 
+    //public method that uses LuckPerms EventBus to update role of player that has connected dc account and update theirs roles
     public void hookLuckListener(Velcord plugin){
 
         EventBus eventBus = luckPermsManager.getLuckApi().getEventBus();

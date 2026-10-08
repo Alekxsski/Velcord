@@ -5,7 +5,7 @@ import Alekxsski.Velcord;
 import com.google.inject.Inject;
 import com.velocitypowered.api.proxy.ProxyServer;
 
-
+//Class registers events
 public class EventListenerManager {
 
     private final ProxyServer server;

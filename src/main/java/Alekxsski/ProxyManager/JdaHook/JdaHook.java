@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 
 @Singleton
+//Class that initializes jda
 public class JdaHook {
 
     private JDA jda;

@@ -7,6 +7,7 @@ import Alekxsski.Utils.DiscordAuth.Utils.DiscordAuthHashMapCleaner;
 
 import java.util.concurrent.TimeUnit;
 
+//Class that generates and initiates tasks
 public class TaskManager {
 
     private final DiscordAuthHashMapCleaner discordAuthHashMapCleaner;

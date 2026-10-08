@@ -13,6 +13,7 @@ import java.util.*;
 
 
 @Singleton
+//Class that manages users on discord and manages theirs roles and nicknames
 public class RolesManager {
 
 
@@ -49,6 +50,7 @@ public class RolesManager {
 
     }
 
+    //Conversion of roles from config to the discord one
     public void discordRolesConversion(){
 
         Map<String, Role> discordRoles = new HashMap<>();
@@ -111,6 +113,7 @@ public class RolesManager {
     }
 
 
+    //method that gets list of the roles that aren't handled by the plugin and weren't provided in config
     private List<Role> getMemberUnsychronizedRoles(List<Role> MemberRoles){
 
         MemberRoles.removeIf(role ->
@@ -121,6 +124,7 @@ public class RolesManager {
 
     }
 
+    //method that check if member has right roles
     public void checkExistingMemberRoles(Member member, String primary_group) throws Exception {
 
         List<Role> MemberActiveRoles = getMemberUnsychronizedRoles(new ArrayList<>(member.getRoles()));
@@ -142,6 +146,7 @@ public class RolesManager {
 
     }
 
+    //method that check if member has valid nickname
     public void checkExistingMemberNick(Member member, String user_mc_name){
 
         String member_nick = member.getNickname();
@@ -154,6 +159,7 @@ public class RolesManager {
 
     }
 
+    //methods check both roles and nickname of user
     public void checkExistingMember(String user_discord_id, String user_mc_name, String primary_role) throws Exception {
 
         Member member = guild.getMemberById(user_discord_id);
@@ -183,6 +189,7 @@ public class RolesManager {
 
     }
 
+    //method handles OAuth2 and instantly invites them with right roles and nickname
     public void OAuth2Member(String user_discord_id,String user_mc_name,String primary_group, String accessToken) throws Exception {
 
         UserSnowflake user = UserSnowflake.fromId(user_discord_id);
@@ -200,7 +207,7 @@ public class RolesManager {
 
     }
 
-
+    //removes user nickname if stated and removes all sync roles
     public void setMemberBackToDefault(String user_discord_id){
 
         Member member = guild.getMemberById(user_discord_id);

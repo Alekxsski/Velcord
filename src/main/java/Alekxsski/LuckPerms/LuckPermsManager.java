@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import java.util.Optional;
 import java.util.UUID;
 
-
+//Class has all necessary functionalities that Velcord would need to retrieve user data and set static luckapi
 public class LuckPermsManager {
 
     private LuckPerms luckApi = null;
@@ -41,7 +41,7 @@ public class LuckPermsManager {
 
     }
 
-
+    //Retrieve data of active player or recently online player
     public LuckPlayerData getActivePlayerData(UUID player_uuid) {
 
             UserManager userManager = getLuckApi().getUserManager();

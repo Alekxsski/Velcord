@@ -35,6 +35,7 @@ public class    DiscordUserManager {
 
     }
 
+    // method used to handle OAuth2 flow and provides ResponseData
     public CompletableFuture<ResponseData> HandleOAuth2(String code, UUID player_uuid){
 
         return CompletableFuture.supplyAsync(()->{

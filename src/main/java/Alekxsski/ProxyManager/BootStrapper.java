@@ -13,6 +13,7 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 
 @Singleton
+//Class that manages start of the plugin and activates needed objects and starts services
 public class BootStrapper {
 
     private final Logger logger;

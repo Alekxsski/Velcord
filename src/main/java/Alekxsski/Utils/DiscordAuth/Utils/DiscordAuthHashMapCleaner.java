@@ -14,6 +14,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Singleton
+//Class manages HashMaps and clears them
 public class DiscordAuthHashMapCleaner implements ReloadBehaviour {
 
     private final ConcurrentHashMap<UUID, DiscordAuthData> discordAuthDataHashMap;

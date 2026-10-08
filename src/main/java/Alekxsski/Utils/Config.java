@@ -24,6 +24,7 @@ import Alekxsski.ProxyManager.ProxyManagement;
 import org.slf4j.Logger;
 
 @Singleton
+//Class manages Config that comes with plugin
 public class Config implements ReloadBehaviour {
 
     private YamlDocument config;
@@ -194,7 +195,7 @@ public class Config implements ReloadBehaviour {
 
     }
 
-
+    //create file if it's not found and sets config file that's going to be used as source of data
     private void make(){
 
         try {

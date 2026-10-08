@@ -11,6 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Singleton
+//Class makes sure that necessary plugins are registered has methods that find player, check if is active and shut down plugin
 public class ProxyManagement {
 
     private final ProxyServer server;

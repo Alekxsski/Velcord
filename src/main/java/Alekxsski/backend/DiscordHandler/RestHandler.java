@@ -8,6 +8,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 
 //Class provides most of necessary functionalities that would be needed to exchange tokens with discord or other api
@@ -51,6 +53,28 @@ public class RestHandler {
                 .uri(fullUrl(url))
                 .headers(headers)
                 .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        int retires = 0;
+
+        while (response.statusCode() == 429 && retires < 3){
+
+            retires++;
+            Optional<String> wait = response.headers().firstValue("Retry-After");
+
+            if(wait.isPresent()){
+
+                double seconds = Double.parseDouble(wait.get());
+                TimeUnit.MILLISECONDS.sleep((long) (seconds * 1000));
+
+            }
+
+            else TimeUnit.SECONDS.sleep(5L);
+
+            response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        }
 
         return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 

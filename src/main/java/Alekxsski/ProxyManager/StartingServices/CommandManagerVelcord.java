@@ -8,6 +8,7 @@ import Alekxsski.Commands.DiscordVerify;
 import Alekxsski.Commands.Reload;
 import Alekxsski.Velcord;
 
+//Class that manages and registers needed commands
 public class CommandManagerVelcord {
 
     private final ProxyServer server;

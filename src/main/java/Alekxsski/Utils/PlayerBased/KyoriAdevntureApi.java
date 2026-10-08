@@ -10,6 +10,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import java.util.HashMap;
 import java.util.Map;
 
+//Class provides two methods to send or play sounds to player using kyori api
 public class KyoriAdevntureApi {
 
     private static final Map<String,SoundsHelper> SoundsMap = new HashMap<>();

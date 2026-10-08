@@ -9,7 +9,7 @@ import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import org.slf4j.Logger;
 
-@Plugin(id = "velcord", name = "velcord", version = "1.0-alpha", dependencies = {@Dependency(id = "luckperms",optional = true)})
+@Plugin(id = "velcord", name = "velcord", version = "1.0", dependencies = {@Dependency(id = "luckperms",optional = true)})
 public class Velcord {
 
     private final BootStrapper bootStrapper;

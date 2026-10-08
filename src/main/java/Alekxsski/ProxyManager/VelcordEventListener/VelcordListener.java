@@ -9,6 +9,7 @@ import com.velocitypowered.api.proxy.Player;
 
 import java.util.List;
 
+//Listener that handles events that happens on proxy and Velcord needs to process them
 public class VelcordListener{
 
     private final DatabaseDiscordMethods databaseDiscordMethods;

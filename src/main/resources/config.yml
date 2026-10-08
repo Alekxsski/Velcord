@@ -1,32 +1,44 @@
 #Please don't change it!
 file-version: 1
 
-
+#tab completer for verification command that will be used for linking
 connect: link
 
+#tab completer for verification command that will be used for unlinking
 disconnect: unlink
 
 #You can use mini messages to make it more interesting!
+
+#Message shown if player is already linked with dc account
 already_connected_message: you have already linked your discord account!
 
+#Message shown to player if he tried to unlink dc account, but they don't have it connected
 not_connected_message: you can't unlink your account because it's not connected!
 
+#Message shown to player that shows them how to use command
 hint_usage: you can type dc link or unlink to manage connect or disconnect discord account
 
+#Message shown to player if theirs code has just expired
 expired_code_message: code has expired
 
+#Message shown to player if something went wrong with connecting unlinking etc
 error_code_message: something went wrong please contact server administrator
 
+#Message shown to player after successfully linking dc account
 connected_message: you have successfully connected your discord account
 
+#Message shown to player after successfully unlinking dc account
 disconnected_message: you have successfully disconnected your discord account
 
+#Put here desired phrase to inform people that they need to click this part to open link or copy command with values
 click_message: 'CLICK ME!'
 
+#Part of message that will be presented before click_message
 before_click_message: Click here to connect your account >>>>>
 
 reload_message: Plugin has been reloaded!
 
+#Message that will be shown if player doesn't have right permission to perform this command
 no_permission: you don't have permission to use this command
 
 #Database
@@ -35,10 +47,13 @@ no_permission: you don't have permission to use this command
 
 driver: 'mysql'
 
+# 192.168.1.1, 127.0.0.1, mydatabase.org.pl
 database_address: 'database address'
 
-database_port: 3306 #default port
+#default port 3306
+database_port: 3306
 
+#Name of the database that's going to be used
 database_name: 'database name'
 
 #Username which will be used to connect to your database
@@ -48,7 +63,6 @@ username: ' '
 password: ' '
 
 #Pools setting(advanced users usage only) I highly recommend to first understand what you're doing before changes!
-
 #How much concurrent connection can plugin make with your database
 MaximumPoolSize: 10
 

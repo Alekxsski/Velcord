@@ -18,6 +18,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Singleton
+//Class handles url requests sends them to db and stores them locally
 public class DiscordAuth implements ReloadBehaviour {
 
     private final Config config;
@@ -105,6 +106,7 @@ public class DiscordAuth implements ReloadBehaviour {
 
         UUID player_uuid = player.getUniqueId();
 
+            //If player has stored code return them
             if (discordAuthDataHashMap.containsKey(player_uuid)){
 
                 return discordAuthDataHashMap.get(player_uuid).getAuth_url();
@@ -115,6 +117,7 @@ public class DiscordAuth implements ReloadBehaviour {
 
             String url = getUrl(player_uuid, code);
 
+            //store code locally
             discordAuthDataHashMap.put(player_uuid,new DiscordAuthData(url,code));
 
                 if(DiscordOAuth2 && RedirectExternally) {
@@ -123,6 +126,7 @@ public class DiscordAuth implements ReloadBehaviour {
 
                         if(playerData != null){
 
+                            //store data in db
                             discordAuthData.executeStatement("INSERT INTO auth_codes(uuid ,username ,primary_group ,code) VALUES (?, ?, ?, ?)",
                                     List.of(player_uuid.toString(), playerData.playerName(), playerData.primaryGroup(), code),null);
 
@@ -138,6 +142,7 @@ public class DiscordAuth implements ReloadBehaviour {
 
                 } else if (DiscordOAuth2) {
 
+                    //store code if webapi will be used
                     discordAuthCodeHashMap.put(code,player_uuid);
 
                 }

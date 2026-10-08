@@ -14,7 +14,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
-
+//Class designed to handle api requests from discord and manages interface between user and server
 public class SimpleApi {
 
     private Javalin simpleApiJavalin;
@@ -73,15 +73,19 @@ public class SimpleApi {
 
                         }
 
+                        //remove code from hashmap
                         discordCodeHashMap.remove(state);
 
+                        //remove player from hashmap
                         discordAuthHashMap.remove(player_uuid);
 
+                        //handle OAuth2
                         return discordUserManager.HandleOAuth2(code,player_uuid)
                                 .thenAccept(responseData -> {
 
                                     Player player = proxyManagement.getPlayer(player_uuid);
 
+                                    //send player message in mc about status of action
                                     if (player != null) {
 
                                         KyoriAdevntureApi.PlaySoundVerication(player, responseData.code() == 200 ? "success" : "fail");
@@ -105,6 +109,7 @@ public class SimpleApi {
 
                                     Player player = proxyManagement.getPlayer(player_uuid);
 
+                                    //send player message in mc about status of action
                                     if (player != null) {
 
                                         KyoriAdevntureApi.PlaySoundVerication(player, "critical");
