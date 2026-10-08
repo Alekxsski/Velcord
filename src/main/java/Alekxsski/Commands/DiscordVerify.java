@@ -9,7 +9,7 @@ import Alekxsski.Interfaces.ReloadBehaviour;
 import Alekxsski.Utils.Config;
 import Alekxsski.Utils.DiscordAuth.DiscordAuth;
 import Alekxsski.ProxyManager.JdaHook.RolesManager.RolesManager;
-import Alekxsski.Utils.PlayerBased.Minimessage;
+import Alekxsski.Utils.PlayerBased.KyoriAdevntureApi;
 
 import java.util.List;
 import java.util.Objects;
@@ -34,6 +34,10 @@ public class DiscordVerify implements SimpleCommand, ReloadBehaviour {
     private String HintUsage;
 
     private String DisconnectedMessage;
+
+    private String Connect;
+
+    private String Disconnect;
 
     @Inject
     public DiscordVerify(DiscordAuth discordAuth, DatabaseDiscordMethods databaseDiscordMethods, RolesManager rolesManager, Config config){
@@ -73,6 +77,10 @@ public class DiscordVerify implements SimpleCommand, ReloadBehaviour {
 
         DisconnectedMessage = config.getDisconnectedMessage();
 
+        Disconnect = config.getDisconnect();
+
+        Connect = config.getConnect();
+
     }
 
     @Override
@@ -84,7 +92,7 @@ public class DiscordVerify implements SimpleCommand, ReloadBehaviour {
 
             if (args.length == 0){
 
-                   player.sendMessage(Minimessage.MinimessagePlain(HintUsage));
+                   player.sendMessage(KyoriAdevntureApi.MinimessagePlain(HintUsage));
 
             }
             else {
@@ -98,26 +106,20 @@ public class DiscordVerify implements SimpleCommand, ReloadBehaviour {
                         List.of(player_uuid.toString()), "discord_user_id")
                         .thenAccept(user_discord_id -> {
 
-                            if (!Objects.equals(user_discord_id, "error")) {
-
-                                if (Objects.equals(args[0], "polacz")) {
+                                if (Objects.equals(args[0], Connect)) {
 
                                     verificationConnect(player, user_discord_id);
 
-                                } else if (Objects.equals(args[0], "rozlacz")) {
+                                } else if (Objects.equals(args[0], Disconnect)) {
 
                                     verificationDisconnect(player, player_uuid, user_discord_id);
 
                                 } else {
 
-                                    player.sendMessage(Minimessage.MinimessagePlain(HintUsage));
+                                    player.sendMessage(KyoriAdevntureApi.MinimessagePlain(HintUsage));
 
                                 }
-                            }
-
-                            else player.sendMessage(Minimessage.MinimessagePlain("command couldn't be executed report this to the admins"));
-
-                });
+                            });
 
             }
 
@@ -129,14 +131,18 @@ public class DiscordVerify implements SimpleCommand, ReloadBehaviour {
 
         if (user_discord_id != null) {
 
-            player.sendMessage(Minimessage.MinimessagePlain(AlreadyConnectedMessage));
+            KyoriAdevntureApi.PlaySoundVerication(player,"deny");
+
+            player.sendMessage(KyoriAdevntureApi.MinimessagePlain(AlreadyConnectedMessage));
 
 
         } else {
 
             String url = discordAuth.MakeUrl(player);
 
-            player.sendMessage(Minimessage.MinimessagePlain(url));
+            KyoriAdevntureApi.PlaySoundVerication(player,"verify");
+
+            player.sendMessage(KyoriAdevntureApi.MinimessagePlain(url));
 
 
         }
@@ -153,7 +159,9 @@ public class DiscordVerify implements SimpleCommand, ReloadBehaviour {
 
                 rolesManager.setMemberBackToDefault(user_discord_id);
 
-                player.sendMessage(Minimessage.MinimessagePlain(DisconnectedMessage));
+                KyoriAdevntureApi.PlaySoundVerication(player,"disconnect");
+
+                player.sendMessage(KyoriAdevntureApi.MinimessagePlain(DisconnectedMessage));
 
 
             });
@@ -161,7 +169,8 @@ public class DiscordVerify implements SimpleCommand, ReloadBehaviour {
 
         } else {
 
-            player.sendMessage(Minimessage.MinimessagePlain(NotConnectedMessage));
+            KyoriAdevntureApi.PlaySoundVerication(player,"deny");
+            player.sendMessage(KyoriAdevntureApi.MinimessagePlain(NotConnectedMessage));
 
         }
 
@@ -171,7 +180,7 @@ public class DiscordVerify implements SimpleCommand, ReloadBehaviour {
     @Override
     public CompletableFuture<List<String>> suggestAsync(final Invocation invocation) {
 
-        return CompletableFuture.completedFuture(List.of("polacz", "rozlacz"));
+        return CompletableFuture.completedFuture(List.of(Connect, Disconnect));
 
     }
 

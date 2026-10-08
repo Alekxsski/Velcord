@@ -4,8 +4,10 @@ import Alekxsski.ProxyManager.ProxyManagement;
 import Alekxsski.Utils.Config;
 import Alekxsski.Utils.DiscordAuth.Utils.DiscordAuthData;
 import Alekxsski.Utils.DiscordAuth.Utils.DiscordAuthHashMap;
+import Alekxsski.Utils.PlayerBased.KyoriAdevntureApi;
 import Alekxsski.backend.DiscordHandler.DiscordUserManager;
 import com.google.inject.Inject;
+import com.velocitypowered.api.proxy.Player;
 import io.javalin.Javalin;
 
 import java.util.UUID;
@@ -79,6 +81,10 @@ public class SimpleApi {
 
                         return discordUserManager.HandleOAuth2(code,player_uuid)
                                 .thenAccept(responseData -> {
+
+                                    Player player = proxyManagement.getPlayer(player_uuid);
+
+                                    if (player != null) KyoriAdevntureApi.PlaySoundVerication(player, responseData.code() == 200 ? "success" : "fail");
 
                                     if (responseData.code() == 200){
 

@@ -1,8 +1,12 @@
 #Please don't change it!
 file-version: 1
 
-#You can use mini messages to make it more interesting!
 
+connect: link
+
+disconnect: unlink
+
+#You can use mini messages to make it more interesting!
 already_connected_message: you have already linked your discord account!
 
 not_connected_message: you can't unlink your account because it's not connected!

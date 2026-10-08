@@ -160,6 +160,12 @@ public class Config implements ReloadBehaviour {
     @Getter
     private String WebApiHost;
 
+    @Getter
+    private String Connect;
+
+    @Getter
+    private String Disconnect;
+
     @Inject
     public Config(Logger logger, ProxyManagement proxyManagement, @DataDirectory Path dataDirectory){
 
@@ -280,6 +286,10 @@ public class Config implements ReloadBehaviour {
         WebApiHost = config.getString(Route.from("WebApiHost"));
 
         DiscordOAuth2 = config.getBoolean(Route.from("DiscordOAuth2"));
+
+        Connect = config.getString(Route.from("connect"));
+
+        Disconnect = config.getString(Route.from("disconnect"));
 
     }
 

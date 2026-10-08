@@ -2,7 +2,7 @@ package Alekxsski.Utils.DiscordAuth;
 
 import Alekxsski.LuckPerms.LuckPermsManager;
 import Alekxsski.LuckPerms.LuckPlayerData;
-import Alekxsski.Utils.PlayerBased.Minimessage;
+import Alekxsski.Utils.PlayerBased.KyoriAdevntureApi;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import Alekxsski.Database.PlayerManagment.DatabaseDiscordMethods;
@@ -130,7 +130,7 @@ public class DiscordAuth implements ReloadBehaviour {
 
                         else{
 
-                            player.sendMessage(Minimessage.MinimessagePlain(ErrorCodeMessage));
+                            player.sendMessage(KyoriAdevntureApi.MinimessagePlain(ErrorCodeMessage));
 
                         }
 
