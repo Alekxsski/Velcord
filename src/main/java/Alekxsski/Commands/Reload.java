@@ -8,7 +8,7 @@ import Alekxsski.Interfaces.ReloadBehaviour;
 import Alekxsski.Utils.Config;
 import Alekxsski.Utils.DiscordAuth.DiscordAuth;
 import Alekxsski.Utils.DiscordAuth.Utils.DiscordAuthHashMapCleaner;
-import Alekxsski.Utils.PlayerBased.Minimessage;
+import Alekxsski.Utils.PlayerBased.KyoriAdevntureApi;
 
 public class Reload implements SimpleCommand, ReloadBehaviour {
 
@@ -83,13 +83,13 @@ public class Reload implements SimpleCommand, ReloadBehaviour {
             if(player.hasPermission("Huzuni_Velocity.reload")){
 
                 reload();
-                player.sendMessage(Minimessage.MinimessagePlain(ReloadMessage));
+                player.sendMessage(KyoriAdevntureApi.MinimessagePlain(ReloadMessage));
 
             }
 
             else{
 
-                player.sendMessage(Minimessage.MinimessagePlain(NoPermission));
+                player.sendMessage(KyoriAdevntureApi.MinimessagePlain(NoPermission));
 
             }
 

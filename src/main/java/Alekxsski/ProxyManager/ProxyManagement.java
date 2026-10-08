@@ -3,6 +3,7 @@ package Alekxsski.ProxyManager;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.velocitypowered.api.plugin.PluginContainer;
+import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import org.slf4j.Logger;
 
@@ -50,6 +51,15 @@ public class ProxyManagement {
     public boolean isPlayerActive(UUID player_uuid){
 
         return server.getPlayer(player_uuid).isPresent();
+
+    }
+
+    public Player getPlayer(UUID player_uuid){
+
+        Optional<Player> player = server.getPlayer(player_uuid);
+
+        return player.orElse(null);
+
 
     }
 

@@ -7,7 +7,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import Alekxsski.Database.PlayerManagment.DatabaseDiscordMethods;
 import Alekxsski.Interfaces.ReloadBehaviour;
 import Alekxsski.Utils.Config;
-import Alekxsski.Utils.PlayerBased.Minimessage;
+import Alekxsski.Utils.PlayerBased.KyoriAdevntureApi;
 
 import java.time.Instant;
 import java.util.*;
@@ -94,7 +94,7 @@ public class DiscordAuthHashMapCleaner implements ReloadBehaviour {
                                     if (discord_user_id == null){
 
                                         databaseDiscordMethods.executeStatement("DELETE FROM auth_codes WHERE uuid = ?",List.of(uuid.toString()),null)
-                                                .thenRun(() -> player.ifPresent(p-> p.sendMessage(Minimessage.MinimessagePlain(ExpiredCodeMessage))));
+                                                .thenRun(() -> player.ifPresent(p-> p.sendMessage(KyoriAdevntureApi.MinimessagePlain(ExpiredCodeMessage))));
 
                                     }
                                 });
@@ -108,7 +108,7 @@ public class DiscordAuthHashMapCleaner implements ReloadBehaviour {
                         
                     }
 
-                    player.ifPresent(p-> p.sendMessage(Minimessage.MinimessagePlain(ExpiredCodeMessage)));
+                    player.ifPresent(p-> p.sendMessage(KyoriAdevntureApi.MinimessagePlain(ExpiredCodeMessage)));
 
                     it.remove();
 

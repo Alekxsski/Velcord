@@ -137,7 +137,7 @@ public class Config implements ReloadBehaviour {
     private String VerifyInvalidCode;
 
     @Getter
-    private String VerifySuccessCode;
+    private String VerifySuccess;
 
     @Getter
     private Map<String,String> RolesToSync;
@@ -159,6 +159,12 @@ public class Config implements ReloadBehaviour {
 
     @Getter
     private String WebApiHost;
+
+    @Getter
+    private String Connect;
+
+    @Getter
+    private String Disconnect;
 
     @Inject
     public Config(Logger logger, ProxyManagement proxyManagement, @DataDirectory Path dataDirectory){
@@ -263,7 +269,7 @@ public class Config implements ReloadBehaviour {
 
         VerifyInvalidCode = config.getString(Route.from("VerifyInvalidCode"));
 
-        VerifySuccessCode = config.getString(Route.from("VerifySuccessCode"));
+        VerifySuccess = config.getString(Route.from("VerifySuccessCode"));
 
         DefaultRole = config.getBoolean(Route.from("DefaultRole"));
 
@@ -280,6 +286,10 @@ public class Config implements ReloadBehaviour {
         WebApiHost = config.getString(Route.from("WebApiHost"));
 
         DiscordOAuth2 = config.getBoolean(Route.from("DiscordOAuth2"));
+
+        Connect = config.getString(Route.from("connect"));
+
+        Disconnect = config.getString(Route.from("disconnect"));
 
     }
 

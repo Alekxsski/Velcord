@@ -31,7 +31,7 @@ public class DiscordVerify extends ListenerAdapter {
 
     private final String VerifyInvalidCode;
 
-    private final String VerifySuccessCode;
+    private final String VerifySuccess;
 
 
     @Inject
@@ -53,7 +53,7 @@ public class DiscordVerify extends ListenerAdapter {
 
         this.VerifyInvalidCode = config.getVerifyInvalidCode();
 
-        this.VerifySuccessCode = config.getVerifySuccessCode();
+        this.VerifySuccess = config.getVerifySuccess();
 
     }
 
@@ -88,7 +88,7 @@ public class DiscordVerify extends ListenerAdapter {
                             rolesManager.makeMemberUpdateUUID(userId,uuid);
                             discordAuthDataHashMap.remove(uuid);
 
-                            event.getHook().sendMessage(VerifySuccessCode).queue();
+                            event.getHook().sendMessage(VerifySuccess).queue();
 
                         });
 

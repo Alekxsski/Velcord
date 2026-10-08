@@ -4,15 +4,15 @@ import Alekxsski.ProxyManager.ProxyManagement;
 import Alekxsski.Utils.Config;
 import Alekxsski.Utils.DiscordAuth.Utils.DiscordAuthData;
 import Alekxsski.Utils.DiscordAuth.Utils.DiscordAuthHashMap;
+import Alekxsski.Utils.PlayerBased.KyoriAdevntureApi;
 import Alekxsski.backend.DiscordHandler.DiscordUserManager;
 import com.google.inject.Inject;
+import com.velocitypowered.api.proxy.Player;
 import io.javalin.Javalin;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 
 public class SimpleApi {
@@ -80,6 +80,15 @@ public class SimpleApi {
                         return discordUserManager.HandleOAuth2(code,player_uuid)
                                 .thenAccept(responseData -> {
 
+                                    Player player = proxyManagement.getPlayer(player_uuid);
+
+                                    if (player != null) {
+
+                                        KyoriAdevntureApi.PlaySoundVerication(player, responseData.code() == 200 ? "success" : "fail");
+                                        player.sendMessage(KyoriAdevntureApi.MinimessagePlain( responseData.code() == 200 ? config.getVerifySuccess() : config.getErrorCodeMessage()));
+
+                                    }
+
                                     if (responseData.code() == 200){
 
                                         ctx.redirect(responseData.value());
@@ -93,6 +102,15 @@ public class SimpleApi {
 
                                 })
                                 .exceptionally(ex ->{
+
+                                    Player player = proxyManagement.getPlayer(player_uuid);
+
+                                    if (player != null) {
+
+                                        KyoriAdevntureApi.PlaySoundVerication(player, "critical");
+                                        player.sendMessage(KyoriAdevntureApi.MinimessagePlain(config.getErrorCodeMessage()));
+
+                                    }
 
                                     ctx.status(500).result("Internal error" + ex.getMessage());
                                     return null;

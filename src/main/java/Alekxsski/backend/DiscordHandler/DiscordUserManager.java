@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 //Class manages OAuth2 flow and on that basis invites user to the guild grants roles and valid minecraft nickname
-public class DiscordUserManager {
+public class    DiscordUserManager {
 
     private final RolesManager rolesManager;
     private final DiscordApi discordApi;
