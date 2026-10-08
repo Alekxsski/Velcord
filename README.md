@@ -24,7 +24,6 @@ Velcord provides oppurtinity to use only one plugin on your proxy server to mana
 - **Live config reloads 🗘**
 
 - **To be added 📌**
-  - Discord rate limiter with bucket system
   - Command to fetch player data(last position, time since player has been seen online, recently joined server[oneblock, survival, etc]
   - if you want something to be added just contact me!
 
