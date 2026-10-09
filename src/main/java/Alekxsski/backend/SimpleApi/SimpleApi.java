@@ -44,7 +44,9 @@ public class SimpleApi {
 
     }
 
-    private void setUp(){
+    private void setUp() throws ClassNotFoundException {
+
+        Class.forName("com.Alexsski.libs.jetty.io.ManagedSelector$CloseConnections");
 
         //Callback api extension
         simpleApiJavalin = Javalin.create(config1 -> {
@@ -142,7 +144,7 @@ public class SimpleApi {
 
     }
 
-    public void simpleApiHook(){
+    public void simpleApiHook() throws ClassNotFoundException {
 
         //Start javalin server if needed and set api port
         if(!config.isRedirectExternally() && config.isDiscordOAuth2()){

@@ -43,7 +43,7 @@ public class BootStrapper {
 
     }
 
-    public void Hook(Velcord plugin) throws IOException {
+    public void Hook(Velcord plugin) throws IOException, ClassNotFoundException {
 
         commandManagerVelcord.registerCommands(plugin);
 

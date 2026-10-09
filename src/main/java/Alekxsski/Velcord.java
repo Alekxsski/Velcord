@@ -27,7 +27,7 @@ public class Velcord {
     }
 
     @Subscribe
-    public void onProxyInitialization(ProxyInitializeEvent event) throws IOException {
+    public void onProxyInitialization(ProxyInitializeEvent event) throws IOException, ClassNotFoundException {
 
         logger.info("Velcord started");
         bootStrapper.Hook(this);
