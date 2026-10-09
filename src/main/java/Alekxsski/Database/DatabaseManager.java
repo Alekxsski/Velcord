@@ -2,6 +2,7 @@ package Alekxsski.Database;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
@@ -9,6 +10,9 @@ import Alekxsski.ProxyManager.ProxyManagement;
 import Alekxsski.Utils.Config;
 import org.slf4j.Logger;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -49,8 +53,10 @@ public class DatabaseManager {
 
     private String DatabaseName;
 
+    private final Path dataDirectory;
+
     @Inject
-    public DatabaseManager(ProxyManagement proxyManagement, Logger logger, Config config){
+    public DatabaseManager(ProxyManagement proxyManagement, Logger logger, Config config,@DataDirectory Path dataDirectory){
 
         this.proxyManagement = proxyManagement;
 
@@ -58,13 +64,13 @@ public class DatabaseManager {
 
         this.config = config;
 
+        this.dataDirectory = dataDirectory;
+
     }
 
-    public void initialize(){
+    public void initialize() throws IOException {
 
         gettingData();
-
-        dbThreads = setUpThreads();
 
         database = establishDatabase();
 
@@ -96,42 +102,61 @@ public class DatabaseManager {
 
     }
 
-    private ExecutorService setUpThreads(){
+    private void setUpThreads(int threads){
 
-        return Executors.newFixedThreadPool(MaximumPoolSize);
+        dbThreads = Executors.newFixedThreadPool(threads);
 
     }
 
-    private HikariDataSource establishDatabase(){
+    private String getDriver() {
+
+        return switch (Driver) {
+            case "mysql" -> "com.mysql.cj.jdbc.Driver";
+            case "mariadb" -> "org.mariadb.jdbc.Driver";
+            default -> "org.sqlite.JDBC";
+        };
+    }
+
+    private HikariDataSource establishDatabase() throws IOException {
 
         HikariConfig config = new HikariConfig();
 
-        String driver;
-
-        String mysql = "com.mysql.cj.jdbc.Driver";
-        String mariadb = "org.mariadb.jdbc.Driver";
-
-        if(Driver.equals("mysql")) driver = mysql;
-
-        else driver = mariadb;
+        String driver = getDriver();
 
         config.setDriverClassName(driver);
 
-        String url_base = "jdbc:%s://%s:%s/%s";
+        logger.info(Driver);
 
-        config.setJdbcUrl(String.format(url_base,Driver,DatabaseAddress,DatabasePort,DatabaseName));
+        if ( Driver.equals("mysql") || Driver.equals("mariadb") ){
 
-        config.setUsername(username);
+            setUpThreads(MaximumPoolSize);
 
-        config.setPassword(password);
+            config.setUsername(username);
 
-        config.setMaximumPoolSize(MaximumPoolSize);
+            config.setPassword(password);
 
-        config.setMinimumIdle(MinimumIdle);
+            config.setMaximumPoolSize(MaximumPoolSize);
 
-        config.setIdleTimeout(IdleTimeout);
+            config.setMinimumIdle(MinimumIdle);
 
-        config.setMaxLifetime(MaxLifetime);
+            config.setIdleTimeout(IdleTimeout);
+
+            config.setMaxLifetime(MaxLifetime);
+
+            String url_base = "jdbc:%s://%s:%s/%s";
+
+            config.setJdbcUrl(String.format(url_base,Driver,DatabaseAddress,DatabasePort,DatabaseName));
+
+        }
+
+        else{
+
+            createDbSqlite();
+            setUpThreads(1);
+            config.setMaximumPoolSize(1);
+            config.setJdbcUrl("jdbc:sqlite:velcord.db");
+
+        }
 
         config.setPoolName("Velcord_Pool");
 
@@ -141,17 +166,22 @@ public class DatabaseManager {
 
     }
 
-    public void shutDown(){
+    private void createDbSqlite() throws IOException {
 
-        database.close();
-        dbThreads.shutdown();
-        logger.info("Database has successfully shut down");
+        File db = new File(dataDirectory.toFile(),"velcord.db");
 
-    }
+        if(db.createNewFile()){
 
-    public Connection getConnection() throws SQLException {
+            logger.info("Database file was created and will be used");
 
-        return database.getConnection();
+        }
+
+        else{
+
+            logger.info("Database file was found and will be used");
+
+        }
+
 
     }
 
@@ -167,13 +197,27 @@ public class DatabaseManager {
             statement.executeUpdate(statement2);
             statement.executeUpdate(statement3);
 
-            logger.info("Huzuni Velocity Plugin Successfully configured database!");
+            logger.info("Velcord Velocity Plugin Successfully configured database!");
 
         }catch (SQLException e){
 
-            proxyManagement.shutDown("Huzuni has Failed to connect to configure database",e);
+            proxyManagement.shutDown("Velcord has Failed to connect to configure database",e);
 
         }
+    }
+
+    public Connection getConnection() throws SQLException {
+
+        return database.getConnection();
+
+    }
+
+    public void shutDown(){
+
+        database.close();
+        dbThreads.shutdown();
+        logger.info("Database has successfully shut down");
+
     }
 
 

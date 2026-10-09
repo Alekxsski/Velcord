@@ -5,6 +5,7 @@ import Alekxsski.Utils.Config;
 import Alekxsski.Utils.DiscordAuth.Utils.DiscordAuthData;
 import Alekxsski.Utils.DiscordAuth.Utils.DiscordAuthHashMap;
 import Alekxsski.Utils.PlayerBased.KyoriAdevntureApi;
+import Alekxsski.Utils.PlayerBased.SoundsEnum;
 import Alekxsski.backend.DiscordHandler.DiscordUserManager;
 import com.google.inject.Inject;
 import com.velocitypowered.api.proxy.Player;
@@ -23,9 +24,11 @@ public class SimpleApi {
     private final ProxyManagement proxyManagement;
     private final ConcurrentHashMap<String, UUID> discordCodeHashMap;
     private final ConcurrentHashMap<UUID, DiscordAuthData> discordAuthHashMap;
+    private final KyoriAdevntureApi adventureApi;
 
     @Inject
-    public SimpleApi(DiscordUserManager discordUserManager, Config config, DiscordAuthHashMap discordAuthHashMap, ProxyManagement proxyManagement){
+    public SimpleApi(DiscordUserManager discordUserManager, Config config, DiscordAuthHashMap discordAuthHashMap,
+                     ProxyManagement proxyManagement, KyoriAdevntureApi adventureApi){
 
         this.discordUserManager = discordUserManager;
 
@@ -36,6 +39,8 @@ public class SimpleApi {
         this.discordAuthHashMap = discordAuthHashMap.getDiscordAuthDataHashMap();
 
         this.proxyManagement = proxyManagement;
+
+        this.adventureApi = adventureApi;
 
     }
 
@@ -88,7 +93,7 @@ public class SimpleApi {
                                     //send player message in mc about status of action
                                     if (player != null) {
 
-                                        KyoriAdevntureApi.PlaySoundVerication(player, responseData.code() == 200 ? "success" : "fail");
+                                        adventureApi.PlaySoundVerication(player, responseData.code() == 200 ? SoundsEnum.SUCCESS : SoundsEnum.FAIL);
                                         player.sendMessage(KyoriAdevntureApi.MinimessagePlain( responseData.code() == 200 ? config.getVerifySuccess() : config.getErrorCodeMessage()));
 
                                     }
@@ -112,7 +117,7 @@ public class SimpleApi {
                                     //send player message in mc about status of action
                                     if (player != null) {
 
-                                        KyoriAdevntureApi.PlaySoundVerication(player, "critical");
+                                        adventureApi.PlaySoundVerication(player, SoundsEnum.CRITICAL);
                                         player.sendMessage(KyoriAdevntureApi.MinimessagePlain(config.getErrorCodeMessage()));
 
                                     }

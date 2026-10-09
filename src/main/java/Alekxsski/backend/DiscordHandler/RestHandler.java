@@ -60,6 +60,8 @@ public class RestHandler {
 
         while (response.statusCode() == 429 && retires < 3){
 
+            logger.info(String.valueOf(response.statusCode()));
+
             retires++;
             Optional<String> wait = response.headers().firstValue("Retry-After");
 
@@ -70,13 +72,13 @@ public class RestHandler {
 
             }
 
-            else TimeUnit.SECONDS.sleep(5L);
+            else TimeUnit.SECONDS.sleep(3L);
 
             response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         }
 
-        return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        return response;
 
     }
 

@@ -43,9 +43,9 @@ no_permission: you don't have permission to use this command
 
 #Database
 
-#which driver you want to use MariaDB or MySQL(mariadb/mysql)?
-
-driver: 'mysql'
+#which driver you want to use MariaDB, MySQL or SQLITE(mariadb/mysql/sqlite) if string will be empty default will be used SQLITE?
+#Also remember that you need mysql or sqlite if you want to use external web api
+driver: ''
 
 # 192.168.1.1, 127.0.0.1, mydatabase.org.pl
 database_address: 'database address'

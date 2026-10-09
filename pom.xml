@@ -152,6 +152,21 @@
                             <shadedPattern>com.Alexsski.libs.jetty</shadedPattern>
                         </relocation>
                     </relocations>
+
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>org/sqlite/native/Mac/**</exclude>
+                                <exclude>org/sqlite/native/FreeBSD/**</exclude>
+                                <exclude>org/sqlite/native/Linux/arm/**</exclude>
+                                <exclude>org/sqlite/native/Linux/aarch64/**</exclude>
+                                <exclude>org/sqlite/native/Windows/arm64/**</exclude>
+                                <exclude>org/sqlite/native/Windows/x86/**</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+
                 </configuration>
 
                 <executions>
@@ -272,6 +287,12 @@
             <version>2.22</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.53.4.0</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 </project>

@@ -1,5 +1,6 @@
 package Alekxsski.Commands;
 
+import Alekxsski.Utils.PlayerBased.SoundsEnum;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.velocitypowered.api.command.SimpleCommand;
@@ -35,12 +36,15 @@ public class DiscordVerify implements SimpleCommand, ReloadBehaviour {
 
     private String DisconnectedMessage;
 
-    private String Connect;
+    private final String Connect;
 
-    private String Disconnect;
+    private final String Disconnect;
+
+    private final KyoriAdevntureApi adevntureApi;
 
     @Inject
-    public DiscordVerify(DiscordAuth discordAuth, DatabaseDiscordMethods databaseDiscordMethods, RolesManager rolesManager, Config config){
+    public DiscordVerify(DiscordAuth discordAuth, DatabaseDiscordMethods databaseDiscordMethods, RolesManager rolesManager,
+                         Config config, KyoriAdevntureApi adevntureApi){
 
         this.discordAuth = discordAuth;
 
@@ -50,6 +54,13 @@ public class DiscordVerify implements SimpleCommand, ReloadBehaviour {
 
         this.rolesManager = rolesManager;
 
+        this.Disconnect = config.getDisconnect();
+
+        this.Connect = config.getConnect();
+
+        this.adevntureApi = adevntureApi;
+
+        setUp();
 
     }
 
@@ -77,10 +88,6 @@ public class DiscordVerify implements SimpleCommand, ReloadBehaviour {
 
         DisconnectedMessage = config.getDisconnectedMessage();
 
-        Disconnect = config.getDisconnect();
-
-        Connect = config.getConnect();
-
     }
 
     @Override
@@ -100,9 +107,8 @@ public class DiscordVerify implements SimpleCommand, ReloadBehaviour {
 
                 UUID player_uuid = player.getUniqueId();
 
-
                 //Check if user is already registered in database
-                databaseDiscordMethods.executeStatement("SELECT discord_user_id FROM minecraft_to_discord WHERE uuid = ?",
+                databaseDiscordMethods.executeStatement("SELECT discord_user_id FROM player_discord WHERE uuid = ?",
                         List.of(player_uuid.toString()), "discord_user_id")
                         .thenAccept(user_discord_id -> {
 
@@ -131,18 +137,18 @@ public class DiscordVerify implements SimpleCommand, ReloadBehaviour {
 
         if (user_discord_id != null) {
 
-            KyoriAdevntureApi.PlaySoundVerication(player,"deny");
-
             player.sendMessage(KyoriAdevntureApi.MinimessagePlain(AlreadyConnectedMessage));
+
+            adevntureApi.PlaySoundVerication(player,SoundsEnum.DENY);
 
 
         } else {
 
             String url = discordAuth.MakeUrl(player);
 
-            KyoriAdevntureApi.PlaySoundVerication(player,"verify");
-
             player.sendMessage(KyoriAdevntureApi.MinimessagePlain(url));
+
+            adevntureApi.PlaySoundVerication(player,SoundsEnum.VERIFY);
 
 
         }
@@ -159,9 +165,9 @@ public class DiscordVerify implements SimpleCommand, ReloadBehaviour {
 
                 rolesManager.setMemberBackToDefault(user_discord_id);
 
-                KyoriAdevntureApi.PlaySoundVerication(player,"disconnect");
-
                 player.sendMessage(KyoriAdevntureApi.MinimessagePlain(DisconnectedMessage));
+
+                adevntureApi.PlaySoundVerication(player,SoundsEnum.DISCONNECT);
 
 
             });
@@ -169,8 +175,8 @@ public class DiscordVerify implements SimpleCommand, ReloadBehaviour {
 
         } else {
 
-            KyoriAdevntureApi.PlaySoundVerication(player,"deny");
             player.sendMessage(KyoriAdevntureApi.MinimessagePlain(NotConnectedMessage));
+            adevntureApi.PlaySoundVerication(player,SoundsEnum.DENY);
 
         }
 

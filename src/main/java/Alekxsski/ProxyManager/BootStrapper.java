@@ -12,6 +12,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.slf4j.Logger;
 
+import java.io.IOException;
+
 @Singleton
 //Class that manages start of the plugin and activates needed objects and starts services
 public class BootStrapper {
@@ -41,7 +43,7 @@ public class BootStrapper {
 
     }
 
-    public void Hook(Velcord plugin) {
+    public void Hook(Velcord plugin) throws IOException {
 
         commandManagerVelcord.registerCommands(plugin);
 

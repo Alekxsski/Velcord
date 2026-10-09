@@ -9,6 +9,8 @@ import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import org.slf4j.Logger;
 
+import java.io.IOException;
+
 @Plugin(id = "velcord", name = "velcord", version = "1.0", dependencies = {@Dependency(id = "luckperms",optional = true)})
 public class Velcord {
 
@@ -25,7 +27,7 @@ public class Velcord {
     }
 
     @Subscribe
-    public void onProxyInitialization(ProxyInitializeEvent event){
+    public void onProxyInitialization(ProxyInitializeEvent event) throws IOException {
 
         logger.info("Velcord started");
         bootStrapper.Hook(this);

@@ -3,6 +3,7 @@ package Alekxsski.Database.PlayerManagment;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import Alekxsski.Database.DatabaseManager;
+import org.slf4j.Logger;
 
 import java.sql.*;
 import java.util.List;
@@ -13,62 +14,54 @@ import java.util.concurrent.CompletionException;
 public class DatabaseDiscordMethods {
 
     private final DatabaseManager databaseManager;
+    private final Logger logger;
 
     @Inject
-    public DatabaseDiscordMethods(DatabaseManager databaseManager){
+    public DatabaseDiscordMethods(DatabaseManager databaseManager, Logger logger){
 
         this.databaseManager = databaseManager;
+        this.logger = logger;
 
     }
 
     public CompletableFuture<String> executeStatement(String sql, List<String> parameters, String column_name){
 
-        return CompletableFuture.supplyAsync( () ->{
+        return CompletableFuture.supplyAsync(() -> {
 
-            String optional_value_from_query = null;
+            String value = null;
 
-            try (Connection connection = databaseManager.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
+            try (Connection connection = databaseManager.getConnection()) {
 
-                if (parameters != null){
+                try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
-                    int index = 0;
-
-                    while(parameters.size() > index){
-
-                        try {
-                            statement.setString(index+1, parameters.get(index));
-                        } catch (SQLException e) {
-                            throw new RuntimeException(e);
+                    if (parameters != null) {
+                        for (int i = 0; i < parameters.size(); i++) {
+                            statement.setString(i + 1, parameters.get(i));
                         }
+                    }
 
-                        index++;
+                    if (column_name != null) {
+                        try (ResultSet result = statement.executeQuery()) {
+
+                            if (result.next()) {
+                                value = result.getString(column_name);
+                            }
+
+                        }
+                    } else {
+                        statement.executeUpdate();
 
                     }
                 }
-
-                if (column_name != null) {
-
-                    ResultSet res = statement.executeQuery();
-
-                    if (res.next()){
-
-                        optional_value_from_query = res.getString(column_name);
-
-                    }
-
-                }
-
-                else statement.executeUpdate();
 
             } catch (Exception e) {
-
+                logger.error(e.getMessage());
                 throw new CompletionException(e);
-
             }
 
-            return optional_value_from_query;
+            return value;
 
-        },databaseManager.getDbThreads());
+        }, databaseManager.getDbThreads());
 
     }
 
