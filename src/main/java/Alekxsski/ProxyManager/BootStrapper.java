@@ -13,6 +13,7 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 @Singleton
 //Class that manages start of the plugin and activates needed objects and starts services
@@ -43,7 +44,7 @@ public class BootStrapper {
 
     }
 
-    public void Hook(Velcord plugin) throws IOException, ClassNotFoundException {
+    public void Hook(Velcord plugin) throws IOException, ClassNotFoundException, InvocationTargetException, IllegalAccessException, NoSuchMethodException {
 
         commandManagerVelcord.registerCommands(plugin);
 

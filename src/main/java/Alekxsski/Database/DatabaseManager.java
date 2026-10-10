@@ -125,8 +125,6 @@ public class DatabaseManager {
 
         config.setDriverClassName(driver);
 
-        logger.info(Driver);
-
         if ( Driver.equals("mysql") || Driver.equals("mariadb") ){
 
             setUpThreads(MaximumPoolSize);

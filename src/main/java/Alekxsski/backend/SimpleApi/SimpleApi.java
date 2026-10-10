@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 import com.velocitypowered.api.proxy.Player;
 import io.javalin.Javalin;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
